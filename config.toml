@@ -16,9 +16,11 @@ generate_feed = true
 highlight_code = true
 
 [extra]
+zola = false
+netlify = false
+maintained_with_love = false
 footer_links = [
-	{ name = "Home", url = "$BASE_URL" }, 
+	{ name = "About", url = "$BASE_URL/about" }, 
 	{ name = "Games", url = "$BASE_URL/games" },
-	{ name = "Music", url = "$BASE_URL/music" },
-	{ name = "Blog", url = "$BASE_URL/blog" },
 ]
+footer_tagline = ""
