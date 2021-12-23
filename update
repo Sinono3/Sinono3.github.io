@@ -1,0 +1,3 @@
+#!/bin/sh
+zola build
+rsync -aP public/ aael:/var/www/aael/ --delete

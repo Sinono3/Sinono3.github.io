@@ -1,0 +1,24 @@
+base_url = "https://aael.xyz"
+title = "aael.xyz"
+description = "The personal site of Aldo Acevedo"
+
+taxonomies = [
+    { name = "tags", feed = true },
+]
+
+theme = "lightspeed"
+
+compile_sass = true
+build_search_index = false
+generate_feed = true
+
+[markdown]
+highlight_code = true
+
+[extra]
+footer_links = [
+	{ name = "Home", url = "$BASE_URL" }, 
+	{ name = "Games", url = "$BASE_URL/games" },
+	{ name = "Music", url = "$BASE_URL/music" },
+	{ name = "Blog", url = "$BASE_URL/blog" },
+]
