@@ -4,30 +4,43 @@ path = "games"
 paginate_by = 5
 +++
 
+This page can be misleading, since most of these are not finished games, but rather prototypes or small ideas I've built upon.
+Sadly, I lost almost all projects that were not uploaded before 2018, and they're lost forever.
+Some are available, though. I will provide links for these. (TODO: Also add screenshots here.)
+
 - Xian Attack (2014)
 - (Untitled zombie top-down shooter game) (2014)
-- Cartorque (2014)
-- Queueb (2014)
-- Queueb: Zombies (2014)
+- [Cartorque (2014)](https://sinono3.itch.io/cartorque) [No download :(]
+- Queueb: Demo (2014)
+- [Queueb: Zombies (2014)](https://sinono3.itch.io/queueb-zombies)
 - Unfortunely [sic] Not Lonely (2015)
 - Infected (2016)
 - (Untitled multiplayer shooter game) (2017)
-- Hackwatch (2018)
-- Radar Inc. (GGJ) (2017)
-- Blackblood (2017)
-- Arrows & Magic (2017)
-- Hackwatch (2018)
-- My Little Zombies (GGJ) (2018)
+- [Radar Inc. (GGJ) (2017)](https://v3.globalgamejam.org/2017/games/radar-inc)
+- [Blackblood (2017)](https://gamejolt.com/games/blackblood/78829)
+- [Arrows & Magic (2017)](https://gamejolt.com/games/arrowsandmagic/249740)
+- [Hackwatch (2018)](https://sinono3.itch.io/hackwatch)
+- [Hackwatch (gamejolt version, 2018)](https://gamejolt.com/games/hackwatch/247917)
+- [My Little Zombies (GGJ) (2018)](https://v3.globalgamejam.org/2018/games/my-little-zombies)
 - (Untitled multiplayer shooter game remake) (2019)
 - (Untitled survival-horror game) (2019)
 - Wendy's Heaven [Text-based RPG] (2018-2019)
-- Wendy's Heaven [Mystery survival-horror game] (2019-2020)
-- NO WORMS (GGJ) (2020)
+- [Wendy's Heaven: Mystery survival-horror game (2019-2020)](https://sinono3.itch.io/wendy)
+- [NO WORMS (GGJ) (2020)](https://v3.globalgamejam.org/2020/games/no-worms-0)
+- [Juego de Malabar (GGJ) (2022)](https://v3.globalgamejam.org/2022/games/juego-de-malabar-5)
 
-Most notably on early 2021 I helped write gameplay code for the Niko game, as an intern in Posibillian Tech.
+## Professional experience
 
-And here some things I made for existing games:
+In the job realm, I worked 5-6 times as an intern in [Posibillian Tech](https://www.posibillian.tech).
+I got to work on the projects _Fhacktions_, _Coin Hunt: World_, _Niko y los 7 mundos_, _Romance GO_.
+Apart from _Niko_ my work on these projects was mostly focused on optimizing and refactoring existing features.
+I also did some DevOps work building a CI/CD system for GitLab.
 
-- Exploding Lee [Garry's Mod addon] (2012)
-- The Exterminator [Garry's Mod addon] (2016)
-- Rebellion [Garry's Mod gamemode] (2018)
+## Mods
+
+Here some things I made for existing games:
+
+- Exploding Lee: Garry's Mod addon (2012)
+- [WaterFly: Portal 2 map (2012)](https://steamcommunity.com/sharedfiles/filedetails/?id=110717686)
+- [The Exterminator: Garry's Mod addon (2016)](https://steamcommunity.com/sharedfiles/filedetails/?id=434143370)
+- [Rebellion: Garry's Mod gamemode (2018)](https://steamcommunity.com/sharedfiles/filedetails/?id=839744028)
