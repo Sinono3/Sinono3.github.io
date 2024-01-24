@@ -22,6 +22,7 @@ maintained_with_love = false
 footer_links = [
 	{ name = "About", url = "$BASE_URL/about" }, 
 	{ name = "Games", url = "$BASE_URL/games" },
+	{ name = "Music", url = "$BASE_URL/music" },
 	{ name = "Contact", url = "$BASE_URL/contact" }, 
 ]
 footer_tagline = ""

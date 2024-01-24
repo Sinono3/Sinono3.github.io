@@ -3,7 +3,7 @@ title = "About"
 path = "about"
 +++
 
-Hi. I'm Aldo. I'm currently (Nov. 2023) a second-semester student of Information Engineering (Software Engineering)
+Hi. I'm Aldo. I'm currently (Jan. 2024) a third-semester student of Information Engineering (kind of like Software Engineering)
 in Taiwan-Paraguay Polytechnic University (臺灣-巴拉圭科技大學). Since starting university, I've had less time for my
 own projects and FOSS (turns out I like studying).
 
@@ -29,10 +29,9 @@ Not everything is listed here, only notable mentions. Sorted by experience.
 	- Love2D
 	- Bevy
 	- MonoGame/XNA
-- Frameworks:
-	- WebGL
-	- OpenGL (with custom graphics engines)
-	- Svelte
+- Frameworks/Libraries:
+	- WebGPU using [`wgpu-rs`](wgpu.rs)
+	- OpenGL/WebGL (with custom graphics engines)
 - DAWs:
 	- Ableton Live 10/11
 	- Renoise 
@@ -64,4 +63,4 @@ Not everything is listed here, only notable mentions. Sorted by experience.
 - [`quiren`](https://github.com/Sinono3/quiren): Edits the filenames of the current directory on the editor of your choice.
 - [`aldoc`](https://github.com/Sinono3/aldoc): A markup language inspired by Markdown. 
 - [`silas`](https://github.com/Sinono3/silas): A cat feeding database, accesible from the browser. Its purpose is to prevent the feeding the cat more times than necessary. 
-- `rwebgarden`: An auto plant waterer, configurable via a website and powered by a Raspberry Pi Zero. 
+- `rwebgarden`: A plant auto-waterer, configurable via a website and powered by a Raspberry Pi Zero. 
