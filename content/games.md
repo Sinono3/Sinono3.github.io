@@ -4,9 +4,9 @@ path = "games"
 paginate_by = 5
 +++
 
-This page can be misleading, since most of these are not finished games, but rather prototypes or small ideas I've built upon.
-Sadly, I lost almost all projects that were not uploaded before 2018, and they're lost forever.
-Some are available, though. I will provide links for these. (TODO: Also add screenshots here.)
+This page can be misleading, since a lot of these are just demos, prototypes or small ideas I've built upon.
+Sadly, I've lost almost all projects that were not uploaded before 2018, and they're lost forever.
+Links are provided for games which are available.
 
 - Xian Attack (2014)
 - (Untitled zombie top-down shooter game) (2014)
@@ -28,13 +28,6 @@ Some are available, though. I will provide links for these. (TODO: Also add scre
 - [Wendy's Heaven: Mystery survival-horror game (2019-2020)](https://sinono3.itch.io/wendy)
 - [NO WORMS (GGJ) (2020)](https://v3.globalgamejam.org/2020/games/no-worms-0)
 - [Juego de Malabar (GGJ) (2022)](https://v3.globalgamejam.org/2022/games/juego-de-malabar-5)
-
-## Professional experience
-
-In the job realm, I worked 5-6 times as an intern in [Posibillian Tech](https://www.posibillian.tech).
-I got to work on the projects _Fhacktions_, _Coin Hunt: World_, _Niko y los 7 mundos_, _Romance GO_.
-Apart from _Niko_ my work on these projects was mostly focused on optimizing and refactoring existing features.
-I also did some DevOps work building a CI/CD system for GitLab.
 
 ## Mods
 

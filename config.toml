@@ -1,28 +1,84 @@
 base_url = "https://aael.xyz"
-title = "aael.xyz"
-description = "The personal site of Aldo Acevedo"
-
-taxonomies = [
-    { name = "tags", feed = true },
-]
-
-theme = "lightspeed"
-
-compile_sass = true
-build_search_index = false
-generate_feed = true
+build_search_index = true
+theme = "papaya"
 
 [markdown]
 highlight_code = true
 
-[extra]
-zola = true
-netlify = false
-maintained_with_love = false
-footer_links = [
-	{ name = "About", url = "$BASE_URL/about" }, 
-	{ name = "Games", url = "$BASE_URL/games" },
-	{ name = "Music", url = "$BASE_URL/music" },
-	{ name = "Contact", url = "$BASE_URL/contact" }, 
+[languages]
+
+[languages.en]
+title = "Aldo Acevedo"
+description = """
+Guy who does software engineering, graphics programming, game development.
+Currently studying Computer Science at Taiwan-Paraguay Polytechnic Universtiy.
+__Trying to get into the field of AI Safety__.
+[Learn more about me.](/about)
+"""
+generate_feed = true
+feed_filename = "atom.xml"
+taxonomies = [
+    { name = "tags", feed = true, lang = "en" },
+    { name = "categories", feed = true, lang = "en" },
 ]
-footer_tagline = ""
+
+[languages.en.translations]
+projects = "Projects"
+blog = "Blog"
+about = "About"
+recent_projects = "Recent Projects"
+more_projects = "More Projects"
+recent_blog_posts = "Recent Blog Posts"
+more_blog_posts = "More blog posts"
+tag = "Tag"
+tags = "Tags"
+to_all_tags = "To all tags"
+category = "Category"
+categories = "Categories"
+to_all_categories = "To all categories"
+view_by = "View by"
+other = "Other"
+minute = "min"
+prev_page = "To newer posts"
+next_page = "To older posts"
+# Customize your post date format. See: https://tera.netlify.app/docs/#date
+date_format = "%B %e, %Y"
+
+games = "Games"
+music = "Music"
+contact = "Contact"
+
+[extra]
+env = "ZOLA_ENV"
+color_mode = "auto"
+
+# List of Papaya navigational menu items. Used to construct the navigation bar. See the README for item schema.
+menu_items = [
+    { name = "projects", url = "$LANG_BASE_URL/projects", show_recent = true, recent_items = 5, recent_trans_key = "recent_projects", more_trans_key = "more_projects" },
+    { name = "games", url = "$LANG_BASE_URL/games"},
+    { name = "music", url = "$LANG_BASE_URL/music"},
+    # { name = "blog", url = "$LANG_BASE_URL/blog", show_recent = true, recent_items = 5, recent_trans_key = "recent_blog_posts", more_trans_key = "more_blog_posts" },
+    { name = "contact", url = "$LANG_BASE_URL/contact"},
+    { name = "about", url = "$LANG_BASE_URL/about", show_recent = false },
+]
+
+[extra.images]
+# Width defined in pixels
+max_width = 2500
+
+
+# Open Graph Protocol objects. See: https://ogp.me/
+[extra.ogp]
+locale = "en_US"
+first_name = "Aldo"
+last_name = "Acevedo"
+gender = "male"
+username = "sinono3"
+
+[extra.social]
+email = "aldoacevedo@protonmail.com"
+github = "Sinono3"
+linkedin = "aldo-acevedo-9a38a9289"
+
+[extra.cdn]
+font_awesome = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
