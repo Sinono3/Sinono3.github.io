@@ -8,8 +8,6 @@ This page can be misleading, since a lot of these are just demos, prototypes or 
 Sadly, I've lost almost all projects that were not uploaded before 2018, and they're lost forever.
 Links are provided for games which are available.
 
-- Xian Attack (2014)
-- (Untitled zombie top-down shooter game) (2014)
 - [Cartorque (2014)](https://sinono3.itch.io/cartorque) [No download :(]
 - Queueb: Demo (2014)
 - [Queueb: Zombies (2014)](https://sinono3.itch.io/queueb-zombies)

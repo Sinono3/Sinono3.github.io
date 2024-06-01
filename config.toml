@@ -54,7 +54,7 @@ color_mode = "auto"
 
 # List of Papaya navigational menu items. Used to construct the navigation bar. See the README for item schema.
 menu_items = [
-    { name = "projects", url = "$LANG_BASE_URL/projects", show_recent = true, recent_items = 5, recent_trans_key = "recent_projects", more_trans_key = "more_projects" },
+    { name = "projects", url = "$LANG_BASE_URL/projects", show_recent = true, recent_items = 2, recent_trans_key = "recent_projects", more_trans_key = "more_projects" },
     { name = "games", url = "$LANG_BASE_URL/games"},
     { name = "music", url = "$LANG_BASE_URL/music"},
     # { name = "blog", url = "$LANG_BASE_URL/blog", show_recent = true, recent_items = 5, recent_trans_key = "recent_blog_posts", more_trans_key = "more_blog_posts" },
