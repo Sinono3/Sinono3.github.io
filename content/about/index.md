@@ -6,9 +6,9 @@ template = "about.html"
 
 {{ img(path="@/about/img1.jpg", class="bordered") }}
 
-Hi. I'm Aldo. I'm currently (Jan. 2024) a third-semester student of Information Engineering (kind of like Software Engineering)
-in [Taiwan-Paraguay Polytechnic University (臺灣-巴拉圭科技大學)](https://zh.wikipedia.org/zh-hant/%E8%87%BA%E7%81%A3-%E5%B7%B4%E6%8B%89%E5%9C%AD%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%B8). Since starting university, I've had less time for my
-own projects and FOSS (turns out I like studying).
+*Last updated: 2024-06-14*
+
+Hi. I'm Aldo. I'm a guy who codes things.
 
 The only project I maintain right now is [`souvlaki`](https://github.com/Sinono3/souvlaki). It's a media key handling library I made back in 2021. I usually just respond to issues and merge pull requests, but I don't do much other than that.
 It was used in [`psst`](https://github.com/jpochyla/psst), which is a big project and made `souvlaki` receive lots of
