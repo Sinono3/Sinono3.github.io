@@ -4,7 +4,7 @@ render = true
 template = "about.html"
 +++
 
-{{ img(path="@/about/img1.jpg", class="bordered") }}
+{{ img(path="@/about/img3.jpg", class="bordered") }}
 
 *Last updated: 2024-06-14*
 
@@ -54,7 +54,7 @@ I also did some DevOps work building a CI/CD system for GitLab.
 ## Achievements
 
 - 2018
-	- **Aguarandú** (Paraguay programming competition): Silver medal.
+	- **Aguarandú** (Paraguay programming competition): 2nd place. (Silver).
 - 2019
 	- **Aguarandú**: 1st place (Gold).
 - 2020
@@ -65,5 +65,5 @@ I also did some DevOps work building a CI/CD system for GitLab.
 	- **Concurso de Conocimientos Matemáticos FACEN UNA**: 1st place (Gold)
 	- **Aguarandú**: 2nd place (Silver).
 - 2023
-	- **IEEEXtreme 2023**: 2nd Place in Paraguay (As DevSquadPro member)
+	- **IEEEXtreme 2023**: 2nd Place in Paraguay (as team of three)
 
