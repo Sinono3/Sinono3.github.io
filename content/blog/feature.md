@@ -175,27 +175,46 @@ This means our code optimizes for the image to be classified as "hen" only from 
 Nothing assures us that if we rotate the image, the image will still be classified as "hen." 
 This means our image is not *transformationally robust*.
 
-**Explain why this improves the noise problem**
+**TODO: Explain why we do this, and how it improves the noise problem**
 
 <center><video controls loop><source src="/blog/app2.mp4" type="video/mp4"></video></center>
 
-**Explain the code behind it**
+**TODO: Code**
 
 ### Improvement 3: Implement L2 regularization
 
+**TODO: Explain why we do this, and how it improves the noise problem**
+
 <center><video controls loop><source src="/blog/app3.mp4" type="video/mp4"></video></center>
+
+**TODO: Code**
 
 ### Improvement 4: Blur the image every few steps
 
+I'll now introduce a sort-of obvious technique to get rid of noise, which can work surprisingly well.
+
+**TODO**
+
 <center><video controls loop><source src="/blog/app4.mp4" type="video/mp4"></video></center>
+
+**TODO: Code**
 
 ## Testing our feature visualization on various classes
 
+TODO
 
 ## Real-world case studies
 
+TODO
+
 ## Limitations
 
+There are definitely some limitations with our current approach:
+
+- ResNet18 is not a very big model, thus its visualizations won't be very high quality.
+- L2 regularization inherently reduces color contrast, since we unfavor color values that stray far from [0.5, 0.5, 0.5].
+
+Reading [this article will give you an idea of how good feature visualization can look when done right](https://distill.pub/2017/feature-visualization/).
 
 ## Conclusion
 
