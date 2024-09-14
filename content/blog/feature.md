@@ -93,7 +93,7 @@ import matplotlib.pyplot as plt
 def ptimg_to_mplimg(input: torch.Tensor):
     with torch.no_grad():
         return input.detach().squeeze().permute(1, 2, 0).clamp(0, 1).numpy()
-# Setting `block=False` allows us to display the progress in real-time
+# Setting `block=False` allows us to display the progress in real time
 def show_img(input: torch.Tensor, block=True):
     plt.imshow(ptimg_to_mplimg(input))
     plt.title(f'Visualization of class {target_class}')
@@ -138,7 +138,7 @@ optimizer = torch.optim.SGD([input], lr=learning_rate)
 We'll create a function that performs a single optimization step to organize our code neatly.
 
 ```python
-def step(model, optimizer: torch.optim.Optimizer, input: torch.Tensor):
+def step(model: torch.nn.Module, optimizer: torch.optim.Optimizer, input: torch.Tensor, target_class: int):
     optimizer.zero_grad()
     output = model(input)
     loss = -output[:, target_class].mean()
@@ -148,6 +148,19 @@ def step(model, optimizer: torch.optim.Optimizer, input: torch.Tensor):
 ```
 
 Here, we have done something important: **We defined our loss function as the negative of the activation of the output neuron corresponding to the target class**. We want this neuron's activation to be as great as possible. Our optimizer tries to *minimize* the cost function, thus, if we set the cost function to be the negative of the target neuron's activation, the optimizer will try to maximize the target neuron's activation.
+
+Now, we simply need to call the step function in a loop, and display our image every few steps, to see the progress.
+
+```python
+STEPS = 200
+for i in range(STEPS):
+    input = step(model, optimizer, input, target_class)
+
+    # Show image every 10 steps
+    if i % 10 == 0:
+        print(f"Step {i}")
+        show_img(input, block=False)
+```
 
 Okay! We've completed our first version. Let's see how it does.
 
