@@ -51,7 +51,7 @@ contact = "Contact"
 
 [extra]
 env = "ZOLA_ENV"
-color_mode = "auto"
+color_mode = "light"
 
 # List of Papaya navigational menu items. Used to construct the navigation bar. See the README for item schema.
 menu_items = [
