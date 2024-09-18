@@ -3,7 +3,7 @@ title = "Music"
 paginate_by = 5
 +++
 
-I have published music under four names. I'll put them from most accessible to least accessible (in my opinion).
+I have published music under four names. I'll put them from most accessible to least accessible (my humble opinion).
 
 
 ## Aldo Acevedo (2020-2021)

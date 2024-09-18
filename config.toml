@@ -10,8 +10,8 @@ highlight_code = true
 [languages.en]
 title = "Aldo Acevedo"
 description = """
-Guy who does software engineering, graphics programming, game development.
-__Incursioning in mechanistic interpretability.__
+Guy who did software engineering, graphics programming, game development.
+__Incursioning in machine learning and mechanistic interpretability.__
 [Learn more about me.](/about)
 
 [**Esta página está disponible en Español.**](/es)
@@ -54,8 +54,8 @@ EN = "EN"
 [languages.es]
 title = "Aldo Acevedo"
 description = """
-Personaje que desarrolló software, gráficos y videojuegos. Ya no hago tanto esas cosas.
-__Incursionando en interpretabilidad mecanística.__
+Personaje que desarrolló software, gráficos y videojuegos.
+__Ahora estoy incursionando en machine learning e interpretabilidad mecanística.__
 [Conoce más acerca de mí.](/about)
 
 [**This page is available in English.**](/)

@@ -3,13 +3,13 @@ title = "Games I've made"
 paginate_by = 5
 +++
 
-> **Advertencia**: Esta página es re básica.
-> Debería poner los *juegos* para que la gente pueda jugar, o imágenes al menos. No me puse las pilas nomás todavía.
-> (Compilar juegos hechos en Unity antes de 2017 en una M1 es quilombero)
+> **Warning**: This page sucks. 
+> I should put the *actual games* so people can play them, or IMAGES at least. I just haven't got around to doing so.
+> (Building games made on Unity versions older than 2017 on an M1 is a f***ed up process)
 
-Esta lista puede ser engañosa, porque muchos de estos fueron sencillamente demos, prototipos o ideas pequeñas.
-Tristemente, perdí casi todos los proyectos que no fueron subidos antes de 2018, y fueron perdidos para siempre.
-Adjunto links para los juegos que sí están disponibles.
+The count can be misleading, since a lot of these are just demos, prototypes or small ideas I've built upon.
+Sadly, I've lost almost all projects that were not uploaded before 2018, and they're lost forever.
+Links are provided for games which are available.
 
 - [Cartorque (2014)](https://sinono3.itch.io/cartorque) <small>No download :(</small>
 - Queueb: Demo (2014)
@@ -32,7 +32,7 @@ Adjunto links para los juegos que sí están disponibles.
 
 ## Mods
 
-Algunos mods que hice para juegos existentes (full divague):
+Here some things I made for existing games:
 
 - Exploding Lee: Garry's Mod addon (2012)
 - [WaterFly: Portal 2 map (2012)](https://steamcommunity.com/sharedfiles/filedetails/?id=110717686)
