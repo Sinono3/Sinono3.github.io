@@ -6,7 +6,7 @@ date = 2024-09-27
 tags = ["interpretability", "ml"]
 +++
 
-{{ video(path="castle_small.mp4", caption="Visualization of castle (483)", autoplay=true) }}
+{{ video(path="/blog/feature/castle_sped.mp4", caption="Visualization of castle (483)", autoplay=true) }}
 
 Growing more capable by the second, AI is being adopted by both industries and governments as a mainstream technology.
 AI allows automation of knowledge work. With enough data, compute, and algorithmic improvements, AI can replace engineering,
@@ -41,11 +41,11 @@ Once trained, **models are black boxes**: while we provide inputs and get mostly
 
 I'll present you with an example of what I mean. Consider [this cat](https://unsplash.com/photos/black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk).
 
-{{ img(path="./cat.jpg", caption="[*(Consider them.)*](https://aisafety.dance/)") }} 
+{{ img(path="/blog/feature/cat.jpg", caption="[*(Consider them.)*](https://aisafety.dance/)") }} 
 
 If fed to an image classification model such as ResNet18, it would be classified as "Egyptian cat," which wouldn't be far from the truth. There's no single "cat" category, so it would be impossible for the model to simply answer "cat." So, practically, it's correct!
 
-{{ img(path="./ResNet18.excalidraw.svg", extended_width_pct=0.1) }} 
+{{ img(path="/blog/feature/ResNet18.excalidraw.svg", extended_width_pct=0.1) }} 
 
 But how did the model come to that conclusion? Let's do a reverse analysis.
 
@@ -77,7 +77,7 @@ In a perfect world, if we were to visualize class 285 on ResNet18, we would get 
 
 Using PyTorch, let's implement class visualization for a pre-trained image classification model. We're going to choose a specific ImageNet class and optimize an image so the model classifies it in the specified class. So, which class are we choosing?
 
-{{ img(path="./hen.jpg", caption="ImageNet class 8: *hen*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
+{{ img(path="/blog/feature/hen.jpg", caption="ImageNet class 8: *hen*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
 
 Why chickens? Because **all** of them they easily recognizable red combs. Thus, it will be easier to see if our visualization works at all from the get-go.
 
@@ -163,7 +163,7 @@ for i in range(STEPS):
 
 Okay! We've completed our first version. Let's see how it does.
 
-{{ video(path="app0.mp4") }}
+{{ video(path="/blog/feature/app0.mp4") }}
 
 Hmm. That doesn't quite look like a fowl. What can we do to improve this?
 
@@ -178,7 +178,7 @@ input = (torch.rand(1, 3, 299, 299) - 0.5) * 0.01 + 0.5
 input.requires_grad = True
 ```
 
-{{ video(path="app1.mp4") }}
+{{ video(path="/blog/feature/app1.mp4") }}
 
 That's a lot better! If one squints, the red combs of the chickens pop out, while in the rest of the image, feather-like patterns start to emerge.
 
@@ -222,7 +222,7 @@ def step():
     optimizer.step()
 ```
 
-{{ video(path="app2.mp4", caption="Result after optimizing for transformational robustness.") }}
+{{ video(path="/blog/feature/app2.mp4", caption="Result after optimizing for transformational robustness.") }}
 
 > **Note on gradient propagation:** While I was originally implementing transformational robustness, I misunderstood its concept and *actually transformed the visualization*, instead of *just doing gradient propagation on* the transformed image. The difference is in the step function:
 > ```python
@@ -256,7 +256,7 @@ def step():
     optimizer.step()
 ```
 
-{{ video(path="app3.mp4") }}
+{{ video(path="/blog/feature/app3.mp4") }}
 
 ### Improvement 4: Blur the image every few steps
 
@@ -288,7 +288,7 @@ This will coincide exactly with our image display, so you can see the blur effec
 To prevent this coincidence you can change the blurring condition to `i % 10 == 1`.
 This will make the blurring occur exactly after displaying the image, instead of before.
 
-{{ video(path="app4.mp4", caption="") }}
+{{ video(path="/blog/feature/app4.mp4", caption="") }}
  
 
 ## Testing our feature visualization on various classes
@@ -296,7 +296,7 @@ This will make the blurring occur exactly after displaying the image, instead of
 Now that we've got something working, let's try our model with lots of different classes:
 
 {{ video(
-path="conclusion.mp4",
+path="/blog/feature/conclusion.mp4",
 caption="From top-left to bottom-right: hen (8), pelican (144), leopard (288), hammer (587), iPod (605), slot (800), potpie (964), scuba diver (983).",
 extended=true
 ) }}
@@ -305,15 +305,15 @@ extended=true
 
 While initially implementing transformational robustness, I misunderstood the concept and *actually transformed the visualization*, instead of *just doing gradient propagation on* the transformed image. During these trying times, I experimented with biasing the transformations to continually increase the scale of the image. The result is an eternal zoom-in effect, but the atmosphere is that of endlessly submerging yourself in alien worlds.
 
-{{ video(path="alien3.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
+{{ video(path="/blog/feature/alien3.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
 
 I also implemented a sort-of L1 regularization where simply the color values multiplied by a lambda coefficient are added to the loss function. This gives some very trippy results.
 
-{{ video(path="alien.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
+{{ video(path="/blog/feature/alien.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
 
 I'd dare say that these moving visualizations give us a different perspective to understand what a feature represents.
 
-{{ video(path="barbellwine.mp4", caption="Left: Barbell World. Right: Wine World.", extended=true) }}
+{{ video(path="/blog/feature/barbellwine.mp4", caption="Left: Barbell World. Right: Wine World.", extended=true) }}
 
 ## Limitations
 
