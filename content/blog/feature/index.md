@@ -6,7 +6,7 @@ date = 2024-09-27
 tags = ["interpretability", "ml"]
 +++
 
-{{ video(path="castle_sped.mp4", caption="Visualization of castle (483)", autoplay=true) }}
+{{ video(path="castle_small.mp4", caption="Visualization of castle (483)", autoplay=true) }}
 
 Growing more capable by the second, AI is being adopted by both industries and governments as a mainstream technology.
 AI allows automation of knowledge work. With enough data, compute, and algorithmic improvements, AI can replace engineering,
