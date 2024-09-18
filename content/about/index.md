@@ -8,13 +8,16 @@ template = "about.html"
 
 *Last updated: 2024-06-14*
 
-Hi. I'm Aldo. I'm a guy who codes things.
+Hi. I'm Aldo.
 
 The only project I maintain right now is [`souvlaki`](https://github.com/Sinono3/souvlaki). It's a media key handling library I made back in 2021. I usually just respond to issues and merge pull requests, but I don't do much other than that.
 It was used in [`psst`](https://github.com/jpochyla/psst), which is a big project and made `souvlaki` receive lots of
 attention.
 
-If you'd like to contact me you can go [here](@/contact.md), I'll make sure to respond.
+If you'd like to contact me you can email me at [aldoacevedo@protonmail.com](mailto:aldoacevedo@protonmail.com). I'll be sure to respond when I can.
+
+> **warning:** In the past I have used aldo@aael.xyz. But I will probably shut it down soon.
+> Don't send e-mails there, as I won't be able to read them.
 
 ## Skills
 

@@ -11,10 +11,8 @@ highlight_code = true
 title = "Aldo Acevedo"
 description = """
 Guy who does software engineering, graphics programming, game development.
-__Incursioning in mechanistic interpretability.__.
+__Incursioning in mechanistic interpretability.__
 [Learn more about me.](/about)
-
-**NOTE 2024-06-01:** For some reason, my domain aael.xyz is missing from the DNS. I am currently fixing the issue, but temporarily the URL will be [`sinono3.github.io`](sinono3.github.io).
 """
 # generate_feed = true
 # feed_filename = "atom.xml"
@@ -55,11 +53,11 @@ color_mode = "light"
 
 # List of Papaya navigational menu items. Used to construct the navigation bar. See the README for item schema.
 menu_items = [
+    { name = "blog", url = "$LANG_BASE_URL/blog", show_recent = true, recent_items = 5, recent_trans_key = "recent_blog_posts", more_trans_key = "more_blog_posts" },
     { name = "projects", url = "$LANG_BASE_URL/projects", show_recent = true, recent_items = 2, recent_trans_key = "recent_projects", more_trans_key = "more_projects" },
     { name = "games", url = "$LANG_BASE_URL/games"},
     { name = "music", url = "$LANG_BASE_URL/music"},
-    { name = "blog", url = "$LANG_BASE_URL/blog", show_recent = true, recent_items = 5, recent_trans_key = "recent_blog_posts", more_trans_key = "more_blog_posts" },
-    { name = "contact", url = "$LANG_BASE_URL/contact"},
+    # { name = "contact", url = "$LANG_BASE_URL/contact"},
     { name = "about", url = "$LANG_BASE_URL/about", show_recent = false },
 ]
 
