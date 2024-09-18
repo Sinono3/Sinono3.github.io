@@ -45,7 +45,8 @@ I'll present you with an example of what I mean. Consider [this cat](https://uns
 
 If fed to an image classification model such as ResNet18, it would be classified as "Egyptian cat," which wouldn't be far from the truth. There's no single "cat" category, so it would be impossible for the model to simply answer "cat." So, practically, it's correct!
 
-{{ img(path="/blog/feature/ResNet18.excalidraw.svg", extended_width_pct=0.1) }} 
+<!-- {{ img(path="ResNet18.excalidraw.svg", extended_width_pct=0.1) }} --> 
+![heheheh](ResNet18.excalidraw.svg)
 
 But how did the model come to that conclusion? Let's do a reverse analysis.
 
