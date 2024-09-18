@@ -35,7 +35,7 @@ Let's go back to the problem statement:
 
 What do I mean by "how they *actually* work"?
 
-For decades, we have built different deep learning architectures such as multi-layer perceptrons; convolutional, residual and recurrent neural networks; LSTMs; transformers; and many more. During training, these machines encode patterns and algorithms inside their parameters (weights, biases, etc). We know how they do this, but not precisely what these patterns and algorithms are.
+For decades, we have built different deep learning architectures such as multi-layer perceptrons; convolutional, residual and recurrent neural networks; LSTMs; transformers; and many more. During training, these machines encode patterns and algorithms inside their parameters (weights, biases, etc). We understand how the process works, but not the specific patterns and algorithms that emerge.
 
 Once trained, **models are black boxes**: while we provide inputs and get mostly correct outputs, we don't understand how the model did so at a neuron level. We know that neurons are connected, but *how* are they connected to achieve the goal?
 
@@ -52,7 +52,7 @@ But how did the model come to that conclusion? Let's do a reverse analysis.
 - Since the ImageNet class "Egyptian cat" has an index of 285, we know that in the fully connected last layer of the model (`fc`), neuron 285 is the greatest among the neurons in that layer (which are 1000 in total). This is because the last operation (`argmax`) returns the index of the previous layer's neuron with the greatest activation.
 - Neuron 285 in `fc` was activated because of some neuron activations in the previous layer (`avgpool`).
 - Neurons in `avgpool` that contributed to neuron 285 in `fc` come from the results of a convolutional layer. 
-- This convolutional layer outputted its result from another convolutional layer... 
+- This convolutional layer calculated its output using another convolutional layer's output.
 - And so on... until we get to the first layer, which is connected directly to the input image (cute cat pic).
 
 From this analysis, multiple questions pop up:
@@ -69,13 +69,13 @@ Today, we're going to have our try at **visualization**.
 
 In the general case of any network, we can define *feature visualization* as generating an input that maximizes the activation of a part of the network: an output neuron, a hidden-layer neuron, a set of neurons, or an entire layer.
 
-In the case of image classification models, feature visualization is quite literally visualization in the sense it refers to generating an image. Let's say we do *class* visualization, where we optimize an image so the model *overwhelmingly* classifies it in a particular class (meaning the neuron corresponding to that class in the last layer will be significantly activated, more than all the other output neurons.) 
+In the case of image classification models, feature *visualization* quite literally refers to generating an image. Let's say we do *class* visualization, where we optimize an image so the model *overwhelmingly* classifies it in a particular class (meaning the neuron corresponding to that class in the last layer will be significantly activated, more than all the other output neurons.) 
 
 In a perfect world, if we were to visualize class 285 on ResNet18, we would get an image of a cute kitten. In reality, though, feature visualizations can be confusing and unintelligible compared to a natural picture. We'll see this as we try to implement it ourselves.
 
 ## Implementing visualization
 
-Using PyTorch, we'll implement class visualization for a pre-trained image classification model. We're going to choose a specific ImageNet class and optimize an image so the model classifies it in the specified class. So, which class are we choosing?
+Using PyTorch, let's implement class visualization for a pre-trained image classification model. We're going to choose a specific ImageNet class and optimize an image so the model classifies it in the specified class. So, which class are we choosing?
 
 {{ img(path="./hen.jpg", caption="ImageNet class 8: *hen*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
 
@@ -102,7 +102,7 @@ def show_img(input: torch.Tensor, title: str):
     plt.title(title)
     # Setting `block=False` and calling `plt.pause` allow us to display the progress in real time
     plt.show(block=False)
-    plt.pause(0.001)
+    plt.pause(0.1)
 ```
 
 With the boilerplate out of the way, let's go ahead and implement the simplest, most obvious way to do class visualization. We'll refer to how we usually train neural networks: using a built-in PyTorch optimizer which adjusts parameters to minimize the loss function. Here, we will try to do the same, but instead of optimizing the model's parameters, we will optimize the input. "What will be our loss function?" you may ask. We'll answer that later.
@@ -237,7 +237,7 @@ def step():
 
 L2 regularization. Hmm, what? It's simply adding the square of the parameters we're optimizing to our loss function. Actually, we add the sum of the squares of our parameters multiplied by a coefficient, usually called λ (lambda). In this case, the parameters are the color values for each pixel.
 
-This basically penalizes color values that stray too far from 0. In our case, we want values that stray too far from 0.5, the "middle" point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.
+This basically penalizes color values that deviate significantly from 0. In our case, we want values that stray too far from 0.5, the "middle" point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.
 
 Implementing it is quite easy. We only need to define λ and change a line in the loss function definition.
 
@@ -260,9 +260,36 @@ def step():
 
 ### Improvement 4: Blur the image every few steps
 
-Now, for a final technique, I'll introduce a sort of obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly, we will only get a blurry image. If done occasionally, though, we can obtain good results.
+Now, for a final technique, I'll introduce a somewhat obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly, we will only get a blurry image. If done occasionally, though, we can obtain good results.
+
+We will add a parameter to our step function so we can know our step index.
+Arbitrarily, I've set the step function to blur the image every 10 steps.
+
+```python
+def step(i: int):
+    optimizer.zero_grad()
+    output = model(transforms(input))
+    loss = -output[:, TARGET_CLASS].mean() + L2_lambda * ((input - 0.5) ** 2).sum()
+    loss.backward()
+    optimizer.step()
+
+    if i % 10 == 0:
+        with torch.no_grad():
+            input.copy_((T.GaussianBlur(5, 1.5))(input))
+
+
+STEPS = 200
+for i in range(STEPS):
+    step(i)
+    # ... the rest of the code
+```
+
+This will coincide exactly with our image display, so you can see the blur effect.
+To prevent this coincidence you can change the blurring condition to `i % 10 == 1`.
+This will make the blurring occur exactly after displaying the image, instead of before.
+
+{{ video(path="app4.mp4", caption="") }}
  
-{{ video(path="app4.mp4", caption="Blurring the image a bit every 10 steps. It's very subtle.") }}
 
 ## Testing our feature visualization on various classes
 
@@ -293,8 +320,9 @@ I'd dare say that these moving visualizations give us a different perspective to
 There are definitely some limitations to our current approach:
 
 - L2 regularization inherently reduces color contrast since we unfavor color values that stray far from [0.5, 0.5, 0.5].
-- ResNet18 is a small model, so its visualizations won't be very high quality. 
+- ResNet18 is a relatively small model, so its visualizations may not be as high quality as those from larger models.
 - ResNet18 seems to have a bias towards the color green. This is a common feature among many of the models I've tested. *My theory*: since many of the classes and thus training data are animal-related, grass is a common denominator in the background of these pictures. Therefore, the model sees a lot of green during its training, which generates a bias.
+- [There are better alternatives to Gaussian blur for our purpose.](https://en.wikipedia.org/wiki/Bilateral_filter)
 
 Reading [this article will give you an idea of how good feature visualization can look when done right](https://distill.pub/2017/feature-visualization/).
 
@@ -302,10 +330,12 @@ Reading [this article will give you an idea of how good feature visualization ca
 
 That's good enough for the scope of this post. I hope you found interpretability to be fun and interesting. 
 
-But hey, if you did, don't stop here! I barely scratched the surface of what the field actually revolves around. There are a bunch of resources for you to continue researching.
+And hey, if you did, don't stop here! I barely scratched the surface of what the field actually revolves around. There are a bunch of resources for you to continue researching:
 
-- [Distill's Circuits Thread](https://distill.pub/2020/circuits/). More related to the specific concept of feature visualizations is [this paper](https://distill.pub/2017/feature-visualization).
-- [Transformer Circuits Thread](https://transformer-circuits.pub/)
+- [Distill's Circuits Thread](https://distill.pub/2020/circuits/): Great and accessible interpretability papers. Contains [a paper specifically related to feature visualizations](https://distill.pub/2017/feature-visualization).
+- [Transformer Circuits Thread](https://transformer-circuits.pub/): State-of-the-art interpretability papers about transformers and language models.
+- [ARENA Course](https://www.arena.education/): Hands-on practice for AI alignment/interpretability skills.
+
 <!--
 I apologize for a lack of formalities. At no point I provided any reference, proof or evidence of what I suggested throughout. However, I believe skipping a couple steps can sometimes be more effective to explain something to someone new to field. (I can confirm that, still being new to the field myself!)
 
