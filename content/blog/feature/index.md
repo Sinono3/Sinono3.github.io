@@ -1,6 +1,7 @@
 +++
 title = "A Brief, Practical Introduction to Feature Visualization"
 date = 2024-09-27
+summary = "We need to understand deep learning models. But how?"
 
 [taxonomies]
 tags = ["interpretability", "ml"]
