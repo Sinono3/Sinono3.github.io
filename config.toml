@@ -1,6 +1,6 @@
 base_url = "https://sinono3.github.io"
-build_search_index = true
 theme = "papaya"
+default_language = "en"
 
 [markdown]
 highlight_code = true
@@ -13,9 +13,12 @@ description = """
 Guy who does software engineering, graphics programming, game development.
 __Incursioning in mechanistic interpretability.__
 [Learn more about me.](/about)
+
+[**Esta página está disponible en Español.**](/es)
 """
-# generate_feed = true
-# feed_filename = "atom.xml"
+
+build_search_index = true
+generate_feeds = true
 taxonomies = [
     { name = "tags", feed = true, lang = "en" },
     { name = "categories", feed = true, lang = "en" },
@@ -45,7 +48,51 @@ date_format = "%B %e, %Y"
 
 games = "Games"
 music = "Music"
-contact = "Contact"
+ES = "ES"
+EN = "EN"
+
+[languages.es]
+title = "Aldo Acevedo"
+description = """
+Personaje que desarrolló software, gráficos y videojuegos. Ya no hago tanto esas cosas.
+__Incursionando en interpretabilidad mecanística.__
+[Conoce más acerca de mí.](/about)
+
+[**This page is available in English.**](/)
+"""
+build_search_index = true
+generate_feeds = true
+taxonomies = [
+    { name = "tags", feed = true, lang = "es" },
+    { name = "categories", feed = true, lang = "es" },
+]
+
+[languages.es.translations]
+projects = "Proyectos"
+blog = "Blog"
+about = "Acerca de"
+recent_projects = "Proyectos recientes"
+more_projects = "Más proyectos"
+recent_blog_posts = "Posts recientes"
+more_blog_posts = "Más posts"
+tag = "Etiqueta"
+tags = "Etiquetas"
+to_all_tags = "Todas las etiquetas"
+category = "Categoría"
+categories = "Categorías"
+to_all_categories = "Todas las categorías"
+view_by = "Ver por"
+other = "Otros"
+minute = "min"
+prev_page = "Posts más nuevos"
+next_page = "Posts más viejos"
+# Customize your post date format. See: https://tera.netlify.app/docs/#date
+date_format = "%B %e, %Y"
+
+games = "Jueguitos"
+music = "Música"
+ES = "ES"
+EN = "EN"
 
 [extra]
 env = "ZOLA_ENV"
@@ -57,7 +104,6 @@ menu_items = [
     { name = "projects", url = "$LANG_BASE_URL/projects", show_recent = true, recent_items = 2, recent_trans_key = "recent_projects", more_trans_key = "more_projects" },
     { name = "games", url = "$LANG_BASE_URL/games"},
     { name = "music", url = "$LANG_BASE_URL/music"},
-    # { name = "contact", url = "$LANG_BASE_URL/contact"},
     { name = "about", url = "$LANG_BASE_URL/about", show_recent = false },
 ]
 

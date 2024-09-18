@@ -1,12 +1,12 @@
 +++
-title = "A Brief, Practical Introduction to Feature Visualization"
+title = "Una breve y práctica introducción a la visualización de features"
 date = 2024-09-27
 
 [taxonomies]
 tags = ["interpretability", "ml"]
 +++
 
-> [**Este post está disponible en Español.**](/es/blog/feature)
+> [**This post is available in English.**](/blog/feature)
 
 {{ video(path="/blog/feature/castle_sped.mp4", caption="Visualization of castle (483)", autoplay=true) }}
 
@@ -337,12 +337,3 @@ And hey, if you did, don't stop here! I barely scratched the surface of what the
 - [Distill's Circuits Thread](https://distill.pub/2020/circuits/): Great and accessible interpretability papers. Contains [a paper specifically related to feature visualizations](https://distill.pub/2017/feature-visualization).
 - [Transformer Circuits Thread](https://transformer-circuits.pub/): State-of-the-art interpretability papers about transformers and language models.
 - [ARENA Course](https://www.arena.education/): Hands-on practice for AI alignment/interpretability skills.
-
-<!--
-I apologize for a lack of formalities. At no point I provided any reference, proof or evidence of what I suggested throughout. However, I believe skipping a couple steps can sometimes be more effective to explain something to someone new to field. (I can confirm that, still being new to the field myself!)
-
-## Prithvi's Notes
-
-- Explaining the code more explicitly. That may help the more general audience understand exactly what they're doing.
-- Maybe add "nutshells", where if people wanted to learn more about a topic, they could open a little box explainer. This is to add information where there could be, but also make it optional.
- -->
