@@ -1,5 +1,5 @@
 +++
-title = "Una breve y práctica introducción a la visualización de features"
+title = "Una breve y práctica introducción a la visualización de features en PyTorch"
 date = 2024-09-27
 
 [taxonomies]
@@ -8,88 +8,93 @@ tags = ["interpretability", "ml"]
 
 > [**This post is available in English.**](/blog/feature)
 
-{{ video(path="/blog/feature/castle_sped.mp4", caption="Visualization of castle (483)", autoplay=true) }}
+{{ video(path="/blog/feature/castle_sped.mp4", caption="Visualización de 'castillo' (483)", autoplay=true) }}
 
-Growing more capable by the second, AI is being adopted by both industries and governments as a mainstream technology.
-AI allows automation of knowledge work. With enough data, compute, and algorithmic improvements, AI can replace engineering,
-research, and administrative jobs.
+A medida que la inteligencia artifical adquiere mayor capacidad, es adoptada por ambos la industria y el gobierno como una tecnología estándar.
+La IA permite la automatización del trabajo del conocimiento. Con suficientes datos, poder computacional y mejoras algorítmicas, una IA podrá ocupar
+puestos investigativos, administrativos o de ingeniería.
 
-This could be great or detrimental, depending on how effectively these technologies achieve our goals.
-There's a bunch of reasons as to why this is, among them: 
+Dependiendo de cuánto estos nos ayuden a alcanzar nuestros objetivos, puede ser a beneficio o detrimento de la humanidad.
+Actualmente hay muchos problemas obstruyendo el avance, entre ellos:
 
-1. We don't understand how deep learning models *actually* work.
-2. We don't know how to make deep learning models do *precisely* what we want.
-3. We don't even know what we want. (Or rather, how to explicitly state what we want)
-4. We don't know which regulations reduce AI misuse most effectively.
-5. *...many more*
+1. No entendemos cómo *realmente* funcionan los modelos de deep learning.
+2. No sabemos cómo hacer que los modelos de deep learning hagan *precisamente* lo que queremos.
+3. No sabemos *qué* queremos. (O mejor dicho, definir precisa y explícitamente qué queremos)
+4. No sabemos qué regulaciones son efectivas para reducir el mal uso de la IA.
+5. *Muchos más...*
 
-While all these problems are critical, this post focuses on problem 1: **interpretability**. I'm not an expert in this field, but I have *just* enough hands-on experience to lend a tiny hand to those looking to get started.
+Mientras que estos problemas son clave, este artículo se enfoca en el problema 1: **interpretabilidad**. No soy un experto en el campo, pero entiendo *justo lo suficiente* para dar una diminuta mano a aquellos que deseen aprender más del tema.
 
 <!-- TODO: You can check out these resources to answer the other questions... -->
 
-> **Heads-up**: I assume some understanding of [feed-forward neural networks (MLP)](https://www.youtube.com/watch?v=aircAruvnKk) and [gradient descent](https://www.youtube.com/watch?v=IHZwWFHWa-w).
+> **Aviso**: Asumo un poco de entendimiento de [redes neuronales feed-forward (MLP)](https://www.youtube.com/watch?v=aircAruvnKk) y [gradient descent](https://www.youtube.com/watch?v=IHZwWFHWa-w).
 
-## What does interpretability solve?
+## ¿Qué resuelve la interpretabilidad?
 
-Let's go back to the problem statement:
+Volvamos al enunciado del problema.
 
-> We don't understand how deep learning models *actually* work.
+> No entendemos cómo *realmente* funcionan los modelos de deep learning.
 
-What do I mean by "how they *actually* work"?
+A qué me refiero por "¿cómo realmente funcionan?"
 
-For decades, we have built different deep learning architectures such as multi-layer perceptrons; convolutional, residual and recurrent neural networks; LSTMs; transformers; and many more. During training, these machines encode patterns and algorithms inside their parameters (weights, biases, etc). We understand how the process works, but not the specific patterns and algorithms that emerge.
+Por decadas, hemos construído diferentes arquitecturas de deep learning, como multi-layer perceptrons; redes neuronales convolucionales, residuales y recurrentes; LSTMs; transformers; y muchos más. Durante el entrenamiento, estas máquinas codifican patrones y algoritmos dentro de sus parámetros (weights, biases, etc). Entendemos cómo funciona el proceso, pero no específicamente los patrones y algorítmos que emergen.
 
-Once trained, **models are black boxes**: while we provide inputs and get mostly correct outputs, we don't understand how the model did so at a neuron level. We know that neurons are connected, but *how* are they connected to achieve the goal?
+Una vez entrenado, **los modelos son cajas negras**: mientras les alimentemos inputs y recibamos outputs correctos, no entendemos como el modelo logró eso a un nivel neuronal. Sabemos que las neuronas están conectadas para eso, pero ¿*cómo*?
 
-I'll present you with an example of what I mean. Consider [this cat](https://unsplash.com/photos/black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk).
+Presentaré un ejemplo para mostrar a qué me refiero. Considerá a [este gato](https://unsplash.com/photos/black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk).
 
-{{ img(path="/blog/feature/cat.jpg", caption="[*(Consider them.)*](https://aisafety.dance/)") }} 
+{{ img(path="/blog/feature/cat.jpg", caption="[*(Dale. Considerale.)*](https://aisafety.dance/)") }} 
 
-If fed to an image classification model such as ResNet18, it would be classified as "Egyptian cat," which wouldn't be far from the truth. There's no single "cat" category, so it would be impossible for the model to simply answer "cat." So, practically, it's correct!
+Si alimentamos esta imagen a un modelo de clasificación como ResNet18, sería clasificado como "Gato egipcio", lo cual no estaría lejos de la verdad.
+No existe una categoría "gato" entre los posibles outputs del modelo, así que sería imposible que el modelo sencillamente responda "gato." Practicamente, está correcto!
 
-{{ img(path="ResNet18.excalidraw.svg", extended_width_pct=0.1) }} 
+<figure class="extended-figure">
+    <img src="/blog/feature/ResNet18.excalidraw.svg" />
+</figure>
 
-But how did the model come to that conclusion? Let's do a reverse analysis.
+¿Pero cómo llegó el modelo a esa conclusión? Hagamos un análisis en reversa.
 
-- Since the ImageNet class "Egyptian cat" has an index of 285, we know that in the fully connected last layer of the model (`fc`), neuron 285 is the greatest among the neurons in that layer (which are 1000 in total). This is because the last operation (`argmax`) returns the index of the previous layer's neuron with the greatest activation.
-- Neuron 285 in `fc` was activated because of some neuron activations in the previous layer (`avgpool`).
-- Neurons in `avgpool` that contributed to neuron 285 in `fc` come from the results of a convolutional layer. 
-- This convolutional layer calculated its output using another convolutional layer's output.
-- And so on... until we get to the first layer, which is connected directly to the input image (cute cat pic).
+- Ya que la clase de ImageNet "Gato egipcio" tiene un índice 285, sabemos que en la última capa fully-connected del modelo (`fc`), la neurona 285 tiene la mayor activations de las neuronas de aquella capa (que son 1000 en total). Esto es por la última operacion (`argmax`) devuelve el índice de la neurona de la capa anterior con la mayor activación.
+- La neurona 285 de `fc` fue activada por algunas activaciones neuronales de la capa anterior (`avgpool`).
+- Neuronas de `avgpool` que contribuyeron a la neurona 285 de `fc` vienen del output de una capa convolucional.
+- Esta capa convolucional fue calculada con los resultados de otra capa convolucional.
+- Y así sucesívamente hasta que lleguemos a la primera capa convolucional, que está directamente conectada a nuestra imagen (gatito.)
 
-From this analysis, multiple questions pop up:
+De este análisis surgen muchas preguntas:
 
-1. **Circuit identification:** Which neurons in `avgpool`, when activated, cause neuron 285 of layer `fc` to activate? And in the previous layer? What complex circuit of neurons has formed across the network's layers to conclude this image corresponds to an "Egyptian cat"?
-2. **Visualization:** What do these neurons firing represent? Do they correspond to concepts, shapes, forms, or objects? Can we see an image of what a single neuron represents? What about a set of neurons?
-3. **Attribution**: What parts of the input image contributed to the model outputting "Egyptian cat"? Which ones didn't? What parts of the input image contribute to a particular neuron firing? What images make a neuron fire?
+1. **Identificación de circuitos:** ¿qué neuronas en `avgpool`, una vez activadas, activan por consecuente a la neurona 285 de la capa `fc`? ¿Y en la capa anterior? ¿Qué circuito complejo de neuronas se ha formado a través de las capas de la red para que el modelo llegue a la conclusión de que esta imagen corresponde a un "Gato egipcio?"
+2. **Visualización:** ¿qué representan los disparos de estas neuronas? ¿Corresponden a conceptos, formas u objetos? ¿Podemos ver una imagen de qué representa una sola neurona? ¿Qué hay acerca de un conjunto de neuronas?
+3. **Atribución:** ¿qué partes de la imagen original contribuyeron a que el modelo concluya "Gato egipcio?" ¿Qué partes no? ¿Qué partes de la imágen contribuyeron a una neurona particular a disparar? ¿Qué imágenes hacen que una neurona dispare?
 
-At the surface level, interpretability tries to answer these kinds of questions.
+Hablando superficialmente, interpretabilidad intenta responder estas preguntas.
 
-Today, we're going to have our try at **visualization**.
+Hoy, vamos a intentar responder algunas preguntas sobre *visualización*.
 
-## Defining visualization
+## Definiendo visualización
 
-In the general case of any network, we can define *feature visualization* as generating an input that maximizes the activation of a part of the network: an output neuron, a hidden-layer neuron, a set of neurons, or an entire layer.
+En el caso general de una red neuronal, podemos definir *visualización de features* como generar un input que maximice la activación de una parte de la red: una neurona de output, una neurona de un hidden-layer, un conjunto de neuronas o una capa entera.
 
-In the case of image classification models, feature *visualization* quite literally refers to generating an image. Let's say we do *class* visualization, where we optimize an image so the model *overwhelmingly* classifies it in a particular class (meaning the neuron corresponding to that class in the last layer will be significantly activated, more than all the other output neurons.) 
+En el caso de un modelo de clasificación de imágenes, con *visualización* de features literalmente nos referimos a generar una imagen. Digamos que hacemos visualización de *clases*, donde optimizamos una imagen como para que el modelo lo clasifique dentro de una clase particular (significando que la neurona correspondiente a esa clase en la última capa será significativamente activada, más que todas las otras neuronas de output.)
 
 In a perfect world, if we were to visualize class 285 on ResNet18, we would get an image of a cute kitten. In reality, though, feature visualizations can be confusing and unintelligible compared to a natural picture. We'll see this as we try to implement it ourselves.
 
-## Implementing visualization
+En un mundo perfecto, si fueramos a visualizar la clase 285 en ResNet18 obtendríamos una imagen de un gatito. Sin embargo, las visualizaciones de features en realidad tienden a ser confusas e ininteligibles comparadas a una foto natural. Veremos esto a medida que lo implementemos nosotros mismos.
 
-Using PyTorch, let's implement class visualization for a pre-trained image classification model. We're going to choose a specific ImageNet class and optimize an image so the model classifies it in the specified class. So, which class are we choosing?
+## Implementando visualización
 
-{{ img(path="/blog/feature/hen.jpg", caption="ImageNet class 8: *hen*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
+Utilizando PyTorch, implementaremos visualización de clases para un modelo de clasificación preentrenado. Vamos a optimizar una imagen para que el modelo la clasifique en una clase de ImageNet de nuestra elección. Entonces, ¿qué clase elegiremos?
 
-Why chickens? Because **all** of them they easily recognizable red combs. Thus, it will be easier to see if our visualization works at all from the get-go.
+{{ img(path="/blog/feature/hen.jpg", caption="Clase 8 de ImageNet: *gallina*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
 
-> **In case you want to use another ImageNet class**, [here's the list you can choose from](https://github.com/pytorch/hub/blob/c7895df70c7767403e36f82786d6b611b7984557/imagenet_classes.txt). Once you did, record the line number of the label and subtract 1 to get the output neuron or class index. (This is because line numbers start at 1, while PyTorch tensors indexes do at 0)
+¿Por qué gallinas? Porque **todas** tienen carúnculas rojas que son fácilmente reconocibles. Entonces, será más fácil saber si nuestra visualización funciona o no desde ya. (Si no vemos formas rojas, algo anda mal.)
 
-We're going to visualize the ResNet18 model. I obtained "good" results with this model during my own experimentation. Better visualizations can be obtained with larger models such as VGG19, but at the cost of optimization speed. In this case, I'm trading off better quality for quicker feedback loops, allowing easier experimentation.
+> **En caso que quieras usar otra clase de ImageNet**, [aquí está la lista de la cual puedes elegir](https://github.com/pytorch/hub/blob/c7895df70c7767403e36f82786d6b611b7984557/imagenet_classes.txt). Una vez que te decidiste, grabá el número de línea del mismo y restale 1 para obtener el índice de la clase. (Esto es porque los números de línea empiezan en 1, mientras que los tensores de PyTorch empiezan en 0)
 
-### Base case: Optimize the input like we're optimizing model parameters
+Vamos a visualizar features del modelo ResNet18. Obtuve resultados decentes con este modelo durante mi propia experimentación. Es posible obtener mejores visualizaciones con modelos más grandes como VGG19, pero al costo de la velocidad de la optimización. En este caso, prefiero feedback loops más rápidos a mejor calidad, porque estas nos permitirán experimentar con facilidad.
 
-We will begin writing code by importing matplotlib as our backend to display images conveniently. We'll also define a function `ptimg_to_mplimg` to convert the images from a PyTorch tensor to a numpy array, suitable for display in matplotlib. We define `show_img` to be able to display images concisely in a single function call.
+### Caso base: Optimizar el input como optimizar parámetros de un modelo
+
+Empezaremos el código importando matplotlib como nuestro backend para mostrar imágenes convenientemente. También definiremos una función `ptimg_to_mplimg` para convertir imágenes de un tensor de PyTorch a un array de numpy, disponibilizandolo así para visualización en matplotlib. Definiremos `show_img` para visualizar imágenes concisamente en una sola llamada de función.
 
 ```python
 import torch
@@ -107,37 +112,37 @@ def show_img(input: torch.Tensor, title: str):
     plt.pause(0.1)
 ```
 
-With the boilerplate out of the way, let's go ahead and implement the simplest, most obvious way to do class visualization. We'll refer to how we usually train neural networks: using a built-in PyTorch optimizer which adjusts parameters to minimize the loss function. Here, we will try to do the same, but instead of optimizing the model's parameters, we will optimize the input. "What will be our loss function?" you may ask. We'll answer that later.
+Con el boilerplate ya escrito, vamos a implementar la forma más simple y obvia de hacer visualización de clases. Vamos a guiarnos de como solemos optimizar redes neuronales: usando un optimizador built-in de PyTorch que ajusta parámetros para minimizar nuestro loss function (función de pérdida). Aquí, intentaremos lo mismo, pero en vez de optimizar los parámetros de un modelo, optimizaremos el input (nuestra imagen). "¿Cuál será nuestro loss function?", te estarás preguntando. Responderemos aquello después.
 
-Let's download the pre-trained model:
+Descargemos el modelo preentrenado.
 
 ```python
 model = torch.hub.load("pytorch/vision:v0.10.0", "resnet18", weights="ResNet18_Weights.IMAGENET1K_V1")
-# Set the model to evaluation mode: 
-# Disables dropout and batch normalization layers, which we don't need right now
+# Ponemos el modelo en modo de evaluación
+# Desactiva capas dropout y de batch normalization, las cuales necesitamos ahora
 model.eval()
 ```
 
-We need to define our initial image, which will be the starting point for the optimization. We'll use uniformly random values ranging from 0 to 1. Do notice that we can use any image as the starting point.
+Necesitamos definir la imagen que será nuestro punto de inicio para la optimización. Usaremos valores random de 0 a 1. Es importante notar que podemos iniciar con cualquier imagen.
 
 ```python
 input = torch.rand(1, 3, 299, 299, requires_grad=True)
 ```
 
-We declare our target class to be "hen."
+Declaramos nuestra clase inicial como "gallina".
 
 ```python
-TARGET_CLASS = 8 # cluck cluck, buck buck bugawk
+TARGET_CLASS = 8 # kokoroko!
 ```
 
-Hmm, what optimizer should we use? Why not plain ol' SGD? (stochastic gradient descent)
+Hmm, ¿qué optimizador deberíamos usar? ¿Por qué no el clásico SGD? (stochastic gradient descent)
 
 ```python
 LR = 0.5
 optimizer = torch.optim.SGD([input], lr=LR)
 ```
 
-We'll create a function that performs a single optimization step to organize our code neatly.
+Crearemos una función que realiza un paso de optimización para que nuestro código esté "ordenado".
 
 ```python
 def step():
@@ -148,32 +153,32 @@ def step():
     optimizer.step()
 ```
 
-Here, we have done something important: **We defined our loss function as the negative of the activation of the output neuron corresponding to the target class**. We want this neuron's activation to be as great as possible. Our optimizer tries to *minimize* the loss function, thus, if we set the loss function to be the negative of the target neuron's activation, the optimizer will try to maximize the target neuron's activation.
+Acá hicimos algo importante: **definimos nuestro loss function como el negativo de la activación de la neurona de output correspondiente a nuestra clase target.** Queremoos que la activación de esta neurona sea lo mayor posible. Nuestro optimizador intenta *minimizar* el loss function, por lo tanto, si definimos el loss function como el negativo de la activación de nuestra neurona target, el optimizador intentará maximizar la activación de la neurona target.
 
-Now, we simply need to call the step function in a loop, displaying our image every few steps to see the progress.
+Ahora, sencillamente necesitamos llamar la función "step" en un bucle, mostrando nuestra imagen cada tanto para ver el progreso.
 
 ```python
 STEPS = 200
 for i in range(STEPS):
     step()
 
-    # Show image every 10 steps
+    # Mostrar la imagen cada 10 pasos
     if i % 10 == 0:
         print(f"Step {i}/{STEPS}")
         show_img(input, f"Visualization of class {TARGET_CLASS}")
 ```
 
-Okay! We've completed our first version. Let's see how it does.
+Okay! Completamos nuestra primera versión. Veamos qué tal le va.
 
 {{ video(path="/blog/feature/app0.mp4") }}
 
-Hmm. That doesn't quite look like a fowl. What can we do to improve this?
+Hmm, no parece tanto una gallina. ¿Qué podemos hacer para resolver esto?
 
-### Improvement 1: Change the initial image
+### Mejora 1: Cambiar la imagen inicial
 
-Starting with random values from 0 to 1 may cause the optimizer to tend to extreme values (outside the 0-1 RGB range). Not only do these values generate high contrast in the image, but if we want to get rid of the noise, starting with an already noisy image may not be the best option. Let's try a more uniformly gray initial image. To be more precise, the same random noise, but with a mean of 0.5 and a range of 0.49-0.51.
+Iniciar con valores random de 0 a 1 puede estar causando que el optimizador tienda a valores extremos (fuera del rango RGB 0-1). No solo esto genera alto contraste en la imagen, pero si queremos deshacernos del ruido, iniciar con una imagen ya ruidosa capaz no sea la mejor opción. Vamos a intentar una imágen más uniformemente gris. Siendo preciso, usarémos exactamente el mismo ruido pero con una media de 0.5 y un rango de 0.49-0.51.
 
-Let's reflect these changes in our code:
+Vamos a reflejar estos cambios en el código.
 
 ```python
 input = (torch.rand(1, 3, 299, 299) - 0.5) * 0.01 + 0.5
@@ -182,22 +187,22 @@ input.requires_grad = True
 
 {{ video(path="/blog/feature/app1.mp4") }}
 
-That's a lot better! If one squints, the red combs of the chickens pop out, while in the rest of the image, feather-like patterns start to emerge.
+Mucho mejor! Si uno entrecierra los ojos, las cabezas rojas de las gallinas resaltan, mientras que en el resto de la imagen, emergen patrones similares a plumas.
 
-### Improvement 2: Enforcing transformational robustness
+### Mejora 2: Robustez transformacional
 
-We've been calculating the gradients based on the same image at the same scale, rotation, and translation for every step.
-This means our code optimizes for the image to be classified as "hen" only from one point of view.
-If we rotate the image, it's not certain that the image will still be classified as "hen." 
-This means our image is not *transformationally robust*.
+Hemos estado calculando los gradientes basado en la misma imagen, a la misma escala, rotación y translación para cada paso.
+Esto significa que nuestro código optimiza para que la imagen sea clasificada como "gallina" solo desde *un* punto de vista.
+Si rotamos la imagen, nada nos asegura que seguirá siendo clasificada como "gallina".
+Nuestra imagen no es *transformacionalmente robusta*.
 
-If we want the model to recognize the target class in our image after being scaled or rotated, we must optimize the image to do so.
+Si queremos que el modelo reconozca nuestro target class en una imagen despues de ser escalada o rotada, debemos incluir aquel proposito en nuestra optimización.
 
-> **Why would this help with the noise problem?**
+> **Por qué esto ayudaría con el problema del ruido?**
 
-I don't have it quite clear, actually. 
-Speaking *very vaguely*, introducing stochastic jittering, scale, and rotation seems to prevent the optimizer from sticking to a certain noisy pattern.
-For a much better explanation, you can check [the *Transformational robustness* section of the *Feature Visualization* paper on Distill.](https://distill.pub/2017/feature-visualization)
+No me está tan claro el porqué, sinceramente.
+Hablando *vagamente*, introducir transformaciones estocásticas parece prevenir que el optimizador se mantenga pegado a algún patron ruidoso.
+Para una explicación mucho mejor, podés revisar [la sección de *Transformational robustness* del papel de *Feature Visualization* en Distill.](https://distill.pub/2017/feature-visualization)
 
 Anyways, the implementation involves applying random transformations on the input before the optimization.
 

@@ -1,5 +1,5 @@
 +++
-title = "A Brief, Practical Introduction to Feature Visualization"
+title = "A Brief, Practical Introduction to Feature Visualization in PyTorch"
 date = 2024-09-27
 summary = "We need to understand deep learning models. But how?"
 
@@ -46,13 +46,15 @@ I'll present you with an example of what I mean. Consider [this cat](https://uns
 
 {{ img(path="/blog/feature/cat.jpg", caption="[*(Consider them.)*](https://aisafety.dance/)") }} 
 
-If fed to an image classification model such as ResNet18, it would be classified as "Egyptian cat," which wouldn't be far from the truth. There's no single "cat" category, so it would be impossible for the model to simply answer "cat." So, practically, it's correct!
+If fed to an image classification model such as ResNet18, it would be classified as "Egyptian cat," which wouldn't be far from the truth. There's no single "cat" category in the model's output categories, so it would be impossible for the model to simply answer "cat." So, practically, it's correct!
 
-{{ img(path="ResNet18.excalidraw.svg", extended_width_pct=0.1) }} 
+<figure class="extended-figure">
+    <img src="/blog/feature/ResNet18.excalidraw.svg" />
+</figure>
 
 But how did the model come to that conclusion? Let's do a reverse analysis.
 
-- Since the ImageNet class "Egyptian cat" has an index of 285, we know that in the fully connected last layer of the model (`fc`), neuron 285 is the greatest among the neurons in that layer (which are 1000 in total). This is because the last operation (`argmax`) returns the index of the previous layer's neuron with the greatest activation.
+- Since the ImageNet class "Egyptian cat" has an index of 285, we know that in the fully connected last layer of the model (`fc`), neuron 285 has the greatest activation among the neurons in that layer (which are 1000 in total). This is because the last operation (`argmax`) returns the index of the previous layer's neuron with the greatest activation.
 - Neuron 285 in `fc` was activated because of some neuron activations in the previous layer (`avgpool`).
 - Neurons in `avgpool` that contributed to neuron 285 in `fc` come from the results of a convolutional layer. 
 - This convolutional layer calculated its output using another convolutional layer's output.
@@ -82,7 +84,7 @@ Using PyTorch, let's implement class visualization for a pre-trained image class
 
 {{ img(path="/blog/feature/hen.jpg", caption="ImageNet class 8: *hen*. [Source.](https://unsplash.com/photos/brown-and-red-he-n-G61iAuzI9NQ)") }} 
 
-Why chickens? Because **all** of them they easily recognizable red combs. Thus, it will be easier to see if our visualization works at all from the get-go.
+Why chickens? Because **all** of them they easily recognizable red caruncles (look it up). Thus, it will be easier to see if our visualization works at all from the get-go.
 
 > **In case you want to use another ImageNet class**, [here's the list you can choose from](https://github.com/pytorch/hub/blob/c7895df70c7767403e36f82786d6b611b7984557/imagenet_classes.txt). Once you did, record the line number of the label and subtract 1 to get the output neuron or class index. (This is because line numbers start at 1, while PyTorch tensors indexes do at 0)
 
@@ -183,14 +185,14 @@ input.requires_grad = True
 
 {{ video(path="/blog/feature/app1.mp4") }}
 
-That's a lot better! If one squints, the red combs of the chickens pop out, while in the rest of the image, feather-like patterns start to emerge.
+That's a lot better! If one squints, the red caruncles of the chickens pop out, while in the rest of the image, feather-like patterns start to emerge.
 
 ### Improvement 2: Enforcing transformational robustness
 
 We've been calculating the gradients based on the same image at the same scale, rotation, and translation for every step.
 This means our code optimizes for the image to be classified as "hen" only from one point of view.
-If we rotate the image, it's not certain that the image will still be classified as "hen." 
-This means our image is not *transformationally robust*.
+If we rotate the image, it's not certain that it will still be classified as "hen." 
+Our image is not *transformationally robust*.
 
 If we want the model to recognize the target class in our image after being scaled or rotated, we must optimize the image to do so.
 
