@@ -204,73 +204,74 @@ No me está tan claro el porqué, sinceramente.
 Hablando *vagamente*, introducir transformaciones estocásticas parece prevenir que el optimizador se mantenga pegado a algún patron ruidoso.
 Para una explicación mucho mejor, podés revisar [la sección de *Transformational robustness* del papel de *Feature Visualization* en Distill.](https://distill.pub/2017/feature-visualization)
 
-Anyways, the implementation involves applying random transformations on the input before the optimization.
+De todos modos, la implementación conlleva aplicar transformaciones aleatorias al input antes de la optimización.
 
-Before our step function, we must define what transforms we'll apply to our image before passing it to our model.
+Antes de nuestro step function, tenemos que definir qué transformaciones vamos a aplicar nuestra imagen antes de pasarla a nuestro modelo.
 
 ```python
 from torchvision import transforms as T
 transforms = T.Compose([
-    # Applies minor changes in brightness, contrast, saturation, and hue
+    # Aplica cambios minúsculos en brillo, contraste, saturación y tono
     T.ColorJitter(brightness=(0.98, 1.02), contrast=(0.99, 1.01), saturation=(0.98, 1.02), hue=(-0.01, 0.01)),
-    # Rotates the image by 15deg clockwise or counter-clockwise. We also apply a bit of random zoom in and out.
+    # Rota la imagen por 15 grados al sentido del reloj o contra el sentido del relo. También aplicamos agrandamos o achicamos un poquito la imagen.
     T.RandomAffine(degrees=(-15.0, 15.0), scale=(0.96,1.04), fill=0.5),
 ])
 ```
 
-On our step function, we must modify the forward-pass call.
+En nuestro step function, debemos modificar nuestro llamado al forward-pass.
 
 ```python
 def step():
     optimizer.zero_grad()
-    output = model(transforms(input))	# <-- this line right here
+    output = model(transforms(input))	# <-- esta línea
     loss = -output[:, TARGET_CLASS].mean()
     loss.backward()
     optimizer.step()
 ```
 
-{{ video(path="/blog/feature/app2.mp4", caption="Result after optimizing for transformational robustness.") }}
+{{ video(path="/blog/feature/app2.mp4", caption="Resultado después de optimizar para robustez transformacional.") }}
 
 > **Note on gradient propagation:** While I was originally implementing transformational robustness, I misunderstood its concept and *actually transformed the visualization*, instead of *just doing gradient propagation on* the transformed image. The difference is in the step function:
 > ```python
-> # Case 1: ACTUALLY TRANSFORMING THE VISUALIZATION (don't try at home)
+> # Caso 1: VERDADERAMENTE TRANSFORMAR LA IMAGEN (permanentemente) (no probar en casa)
 > input = transforms(input.detach())
 > output = model(input)
-> # Case 2: JUST DOING GRADIENT PROPAGATION ON THE TRANSFORMED IMAGE
+> # Caso 2: SOLO HACIENDO PROPAGACIÓN DE GRADIENTES EN LA IMAGEN TRANSFORMADA
 > output = model(transforms(input))
 > ```
 
-### Improvement 3: Implement L2 regularization
+### Mejora 3: Implementar regularización L2
 
-L2 regularization. Hmm, what? It's simply adding the square of the parameters we're optimizing to our loss function. Actually, we add the sum of the squares of our parameters multiplied by a coefficient, usually called λ (lambda). In this case, the parameters are the color values for each pixel.
+Regularización L2. Hmm, qué? Sencillamente significa agregar el cuadrado de los parámetros que estamos optimizando a nuestro loss function. Precisamente, agregaremos la suma de los cuadrados de nuestros parámetros multiplicados por un coeficiente, normalmente llamado λ (lambda). En nuestro caso, los parámetros son los valores de color para cada pixel.
 
-This basically penalizes color values that deviate significantly from 0. In our case, we want values that stray too far from 0.5, the "middle" point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.
+Esto básicamente penaliza valores de color lejanos a 0. En nuestro caso, no queremos valores que estén muy lejos de 0.5, el "punto medio" entre 0.0 y 1.0, el rango de valores de color. Esto permite a nuestra optimización tener un balance entre maximizar nuestra activación target (ya sea clase, neurona, capa, lo que sea) y hacer que nuestra imagen yazca en el rango de colores válidos. Nos ayudará a deshacernos de valores extremos en los canales rojo, verde o azul.
 
-Implementing it is quite easy. We only need to define λ and change a line in the loss function definition.
+Implementar la regularización es bastante fácil. Sólo debemos definir λ y cambiar una linea en la definición de nuestro loss function.
 
 ```python
-LR = 1.5 # We'll also increase the learning rate.
-L2_lambda = 0.05
+LR = 1.5 # También subiremos el learning rate
+L2_lambda = 0.05 # definimos λ
 ```
-In our step function:
+
+En nuestro step function:
 
 ```python
 def step():
     optimizer.zero_grad()
     output = model(transforms(input))
-    loss = -output[:, TARGET_CLASS].mean() + L2_lambda * ((input - 0.5) ** 2).sum()     # <-- this line
+    loss = -output[:, TARGET_CLASS].mean() + L2_lambda * ((input - 0.5) ** 2).sum()     # <-- esta línea
     loss.backward()
     optimizer.step()
 ```
 
 {{ video(path="/blog/feature/app3.mp4") }}
 
-### Improvement 4: Blur the image every few steps
+### Mejora 4: Desenfocar la imagen cada tantos pasos
 
-Now, for a final technique, I'll introduce a somewhat obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly, we will only get a blurry image. If done occasionally, though, we can obtain good results.
+Ahora para una técnica final, introduciré una técnica medio obvia para deshacernos del ruido que puede funcionar sorprendentemente bien: sencillamente aplicar Gaussian blur a la imagen. Claro, si hacemos esto repetidamente solo tendremos una imagen borrosa. Sin embargo, si lo hacemos ocasionalmente podemos tener buenos resultados.
 
-We will add a parameter to our step function so we can know our step index.
-Arbitrarily, I've set the step function to blur the image every 10 steps.
+Agregaremos un parámetro `i` a nuestro step function para saber en qué paso estamos.
+Arbitrariamente, he puesto que en la step function la imagen se desenfoque cada 10 pasos.
 
 ```python
 def step(i: int):
@@ -288,57 +289,60 @@ def step(i: int):
 STEPS = 200
 for i in range(STEPS):
     step(i)
-    # ... the rest of the code
+    # ... el resto del código...
 ```
 
-This will coincide exactly with our image display, so you can see the blur effect.
-To prevent this coincidence you can change the blurring condition to `i % 10 == 1`.
-This will make the blurring occur exactly after displaying the image, instead of before.
+El desenfoque coincidirá exactamente con nuestro display de la imagen, tan solo para visualizar el efecto (el efecto será más obvio).
+Si uno no quiere esto, puede cambiar la condición de desenfoque a `i % 10 == 1`.
+Esto hará que la imagen se desenfoque *exactamente el paso después* de mostrar la imagen, en vez de antes.
+de mostrar la imagen, en vez de antes.
 
-{{ video(path="/blog/feature/app4.mp4", caption="") }}
+{{ video(path="/blog/feature/app4.mp4") }}
  
+## Probando nuestra visualización con otras clases
 
-## Testing our feature visualization on various classes
-
-Now that we've got something working, let's try our model with lots of different classes:
+Ahora que tenemos algo que funciona, probemoslo con varias clases.
 
 {{ video(
 path="/blog/feature/conclusion.mp4",
-caption="From top-left to bottom-right: hen (8), pelican (144), leopard (288), hammer (587), iPod (605), slot (800), potpie (964), scuba diver (983).",
+caption="De izquierda-arriba a derecha-abajo: gallina (8), pelícano (144), leopardo (288), martillo (587), iPod (605), ranura (800), estofado de carne (964), buceador (983).",
 extended=true
 ) }}
 
-### Weird experimentation (eternal zoom-in)
+### Experimentación extraña (zoom eterno)
 
-While initially implementing transformational robustness, I misunderstood the concept and *actually transformed the visualization*, instead of *just doing gradient propagation on* the transformed image. During these trying times, I experimented with biasing the transformations to continually increase the scale of the image. The result is an eternal zoom-in effect, but the atmosphere is that of endlessly submerging yourself in alien worlds.
+Inicialmente al implementar robustez transformacional, malentendí el concepto y *transforme la visualización*, en vez de *solo hacer propagación de gradiente* en la imagen transformada. Durante estos tiempos difíciles, experimenté con continuamente aumentar el tamaño de la imagen. El resultado en las visualizaciones es un zoom-in eterno, pero la atmosfera es una de sumergirse en mundos alienígenas sin fin.
 
-{{ video(path="/blog/feature/alien3.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
+{{ video(path="/blog/feature/alien3.mp4", caption="Izquierda: 'gallina' (8). Derecha: 'petirrojo' (15)", extended=true) }}
 
-I also implemented a sort-of L1 regularization where simply the color values multiplied by a lambda coefficient are added to the loss function. This gives some very trippy results.
+También implementé una especie de regularización L1 donde sencillamente el valor de los colores multiplicados por el coeficiente son agregados al loss function. Esto da resultados muy interesantes, pero no son tan representantivos de los conceptos.
 
-{{ video(path="/blog/feature/alien.mp4", caption="Left: 'hen' (8). Right: 'robin' (15)", extended=true) }}
+{{ video(path="/blog/feature/alien.mp4", caption="Izquierda: 'gallina' (8). Derecha: 'petirrojo' (15)", extended=true) }}
 
-I'd dare say that these moving visualizations give us a different perspective to understand what a feature represents.
+Me atrevo a decir que estas visualizaciones animadas, en vez de ser 100% inútiles, nos dan una perspectiva diferente para entender qué visualizan.
 
-{{ video(path="/blog/feature/barbellwine.mp4", caption="Left: Barbell World. Right: Wine World.", extended=true) }}
+{{ video(path="/blog/feature/barbellwine.mp4", caption="Izquierda: Mundo de las barras. Derecha: Mundo del vino.", extended=true) }}
 
 ## Limitations
 
-There are definitely some limitations to our current approach:
+Nuestro método actual definivamente tiene limitaciones:
 
-- L2 regularization inherently reduces color contrast since we unfavor color values that stray far from [0.5, 0.5, 0.5].
-- ResNet18 is a relatively small model, so its visualizations may not be as high quality as those from larger models.
+- La regularización L2 inherentemente reduce el contraste de colores ya que desfavora valores que se alejan de [0.5, 0.5, 0.5], A pesar de que en el mundo real, sí hay muchas cosas con colores muy extremos.
+- ResNet18 es un modelo relativamente pequeño, así que sus visualizaciones pueden no ser de tan alta calidad como esas de modelos más grandes.
 - ResNet18 seems to have a bias towards the color green. This is a common feature among many of the models I've tested. *My theory*: since many of the classes and thus training data are animal-related, grass is a common denominator in the background of these pictures. Therefore, the model sees a lot of green during its training, which generates a bias.
-- [There are better alternatives to Gaussian blur for our purpose.](https://en.wikipedia.org/wiki/Bilateral_filter)
+- Resnet18 parece tener un bias hacia el color verde. Esto fue un factor común en muchos de los modelos que he probado. *My teoría*: ya que muchas de las clases y por ende datos de entrenamiento, son relacionados a animales, el pasto es común en todas las imágenes. Entonces, el modelo parece ver mucho verde durante su entrenamiento, que genera un bias.
+- [Hay alternativas mejores a Gaussian blur para nuestro propósito.](https://en.wikipedia.org/wiki/Bilateral_filter)
 
-Reading [this article will give you an idea of how good feature visualization can look when done right](https://distill.pub/2017/feature-visualization/).
+Leer [este artículo te puede dar una idea de lo loco que puede verse la visualización de features cuando está bien implementada.](https://distill.pub/2017/feature-visualization/).
 
 ## Conclusion
 
-That's good enough for the scope of this post. I hope you found interpretability to be fun and interesting. 
+Esto es suficiente para el post. Espero que la interpretabilidad te haya parecido divertida e interesante.
 
 And hey, if you did, don't stop here! I barely scratched the surface of what the field actually revolves around. There are a bunch of resources for you to continue researching:
 
-- [Distill's Circuits Thread](https://distill.pub/2020/circuits/): Great and accessible interpretability papers. Contains [a paper specifically related to feature visualizations](https://distill.pub/2017/feature-visualization).
-- [Transformer Circuits Thread](https://transformer-circuits.pub/): State-of-the-art interpretability papers about transformers and language models.
-- [ARENA Course](https://www.arena.education/): Hands-on practice for AI alignment/interpretability skills.
+Y hey, si es así, no pares aquí! Apenas tuvimos un vistazo superficial de lo que realmente se trata el campo. Hay un montón de recursos para seguir investigando.Lastimosamente, casi no existe contenido del tema en español. (Por eso hice este post, lo cuál fue difícil porque gran parte de la terminología no existe en español). Si uno quiere empezar en el campo, es clave aprender inglés. Uno podrá llegar mucho más lejos con la barrera del idioma rota. De todos modos, les dejo los links a los artículos en inglés:
+
+- [Distill's Circuits Thread](https://distill.pub/2020/circuits/): Artículos excelentes y accesibles de interpretabilidad. Contiene [un paper específicamente relacionado a la visualización de features](https://distill.pub/2017/feature-visualization)
+- [Transformer Circuits Thread](https://transformer-circuits.pub/): Artículos de interpretabilidad de transformers y modelos de lenguaje.
+- [ARENA Course](https://www.arena.education/): Práctica práctica para habilidades de alineación de IA y interpretabilidad.

@@ -242,7 +242,7 @@ def step():
 
 L2 regularization. Hmm, what? It's simply adding the square of the parameters we're optimizing to our loss function. Actually, we add the sum of the squares of our parameters multiplied by a coefficient, usually called λ (lambda). In this case, the parameters are the color values for each pixel.
 
-This basically penalizes color values that deviate significantly from 0. In our case, we want values that stray too far from 0.5, the "middle" point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.
+This basically penalizes color values that deviate significantly from 0. In our case, we don't want values that stray too far from 0.5, the "middle" point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.
 
 Implementing it is quite easy. We only need to define λ and change a line in the loss function definition.
 
@@ -265,7 +265,7 @@ def step():
 
 ### Improvement 4: Blur the image every few steps
 
-Now, for a final technique, I'll introduce a somewhat obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly, we will only get a blurry image. If done occasionally, though, we can obtain good results.
+Now, for a final technique, I'll introduce a somewhat obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly we will only get a blurry image. If done occasionally, though, we can obtain good results.
 
 We will add a parameter to our step function so we can know our step index.
 Arbitrarily, I've set the step function to blur the image every 10 steps.
@@ -296,7 +296,7 @@ This will make the blurring occur exactly after displaying the image, instead of
 {{ video(path="/blog/feature/app4.mp4", caption="") }}
  
 
-## Testing our feature visualization on various classes
+## Testing our visualization on various classes
 
 Now that we've got something working, let's try our model with lots of different classes:
 
