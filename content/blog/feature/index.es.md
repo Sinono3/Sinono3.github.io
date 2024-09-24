@@ -330,7 +330,7 @@ Nuestro método actual definivamente tiene limitaciones:
 - La regularización L2 inherentemente reduce el contraste de colores ya que desfavora valores que se alejan de [0.5, 0.5, 0.5], A pesar de que en el mundo real, sí hay muchas cosas con colores muy extremos.
 - ResNet18 es un modelo relativamente pequeño, así que sus visualizaciones pueden no ser de tan alta calidad como esas de modelos más grandes.
 - ResNet18 seems to have a bias towards the color green. This is a common feature among many of the models I've tested. *My theory*: since many of the classes and thus training data are animal-related, grass is a common denominator in the background of these pictures. Therefore, the model sees a lot of green during its training, which generates a bias.
-- Resnet18 parece tener un bias hacia el color verde. Esto fue un factor común en muchos de los modelos que he probado. *My teoría*: ya que muchas de las clases y por ende datos de entrenamiento, son relacionados a animales, el pasto es común en todas las imágenes. Entonces, el modelo parece ver mucho verde durante su entrenamiento, que genera un bias.
+- ResNet18 parece tener un bias hacia el color verde. Esto fue un factor común en muchos de los modelos que he probado. *My teoría*: ya que muchas de las clases y por ende datos de entrenamiento, son relacionados a animales, el pasto es común en todas las imágenes. Entonces, el modelo parece ver mucho verde durante su entrenamiento, que genera un bias.
 - [Hay alternativas mejores a Gaussian blur para nuestro propósito.](https://en.wikipedia.org/wiki/Bilateral_filter)
 
 Leer [este artículo te puede dar una idea de lo loco que puede verse la visualización de features cuando está bien implementada.](https://distill.pub/2017/feature-visualization/).
@@ -338,8 +338,6 @@ Leer [este artículo te puede dar una idea de lo loco que puede verse la visuali
 ## Conclusion
 
 Esto es suficiente para el post. Espero que la interpretabilidad te haya parecido divertida e interesante.
-
-And hey, if you did, don't stop here! I barely scratched the surface of what the field actually revolves around. There are a bunch of resources for you to continue researching:
 
 Y hey, si es así, no pares aquí! Apenas tuvimos un vistazo superficial de lo que realmente se trata el campo. Hay un montón de recursos para seguir investigando.Lastimosamente, casi no existe contenido del tema en español. (Por eso hice este post, lo cuál fue difícil porque gran parte de la terminología no existe en español). Si uno quiere empezar en el campo, es clave aprender inglés. Uno podrá llegar mucho más lejos con la barrera del idioma rota. De todos modos, les dejo los links a los artículos en inglés:
 
