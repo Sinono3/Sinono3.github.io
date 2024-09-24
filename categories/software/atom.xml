@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Aldo Acevedo - software</title>
+    <subtitle>Guy who did software engineering, graphics programming, game development.
+__Incursioning in machine learning and mechanistic interpretability.__
+[Learn more about me.](&#x2F;about)
+
+[**Esta página está disponible en Español.**](&#x2F;es)
+</subtitle>
+    <link href="https://sinono3.github.io/categories/software/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://sinono3.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-01-01T00:00:00+00:00</updated>
+    <id>https://sinono3.github.io/categories/software/atom.xml</id>
+    <entry xml:lang="en">
+        <title>souvlaki</title>
+        <published>2023-01-01T00:00:00+00:00</published>
+        <updated>2023-01-01T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/projects/souvlaki/" type="text/html"/>
+        <id>https://sinono3.github.io/projects/souvlaki/</id>
+        
+        <summary type="html">&lt;p&gt;A cross-platform library for handling OS media controls and metadata. One abstraction for Linux, MacOS and Windows.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>quiren</title>
+        <published>2021-12-06T00:00:00+00:00</published>
+        <updated>2021-12-06T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/projects/quiren/" type="text/html"/>
+        <id>https://sinono3.github.io/projects/quiren/</id>
+        
+        <summary type="html">&lt;p&gt;Edits the filenames of the current directory on the editor of your choice.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>canved</title>
+        <published>2021-07-09T00:00:00+00:00</published>
+        <updated>2021-07-09T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/projects/canved/" type="text/html"/>
+        <id>https://sinono3.github.io/projects/canved/</id>
+        
+        <summary type="html">&lt;p&gt;A lightweight and minimalistic image editor for Unix systems.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>aldoc</title>
+        <published>2021-06-28T00:00:00+00:00</published>
+        <updated>2021-06-28T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/projects/aldoc/" type="text/html"/>
+        <id>https://sinono3.github.io/projects/aldoc/</id>
+        
+        <summary type="html">&lt;p&gt;Markup language inspired by Markdown. Compiles to PDF and LaTeX.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>

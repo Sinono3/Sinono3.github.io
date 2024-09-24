@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>Aldo Acevedo - ml</title>
+    <subtitle>Guy who did software engineering, graphics programming, game development.
+__Incursioning in machine learning and mechanistic interpretability.__
+[Learn more about me.](&#x2F;about)
+
+[**Esta página está disponible en Español.**](&#x2F;es)
+</subtitle>
+    <link href="https://sinono3.github.io/tags/ml/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://sinono3.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-09-27T00:00:00+00:00</updated>
+    <id>https://sinono3.github.io/tags/ml/atom.xml</id>
+    <entry xml:lang="en">
+        <title>A Brief, Practical Introduction to Feature Visualization in PyTorch</title>
+        <published>2024-09-27T00:00:00+00:00</published>
+        <updated>2024-09-27T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/blog/feature/" type="text/html"/>
+        <id>https://sinono3.github.io/blog/feature/</id>
+        
+        <content type="html">&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;&#x2F;es&#x2F;blog&#x2F;feature&quot;&gt;&lt;strong&gt;Este post está disponible en Español.&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+
+
+&lt;figure &gt;
+    &lt;video  autoplay  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;castle_sped.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;Visualization of castle (483)&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;Growing more capable by the second, AI is being adopted by both industries and governments as a mainstream technology.
+AI allows automation of knowledge work. With enough data, compute, and algorithmic improvements, AI can replace engineering,
+research, and administrative jobs.&lt;&#x2F;p&gt;
+&lt;p&gt;This could be great or detrimental, depending on how effectively these technologies achieve our goals.
+There&#x27;s a bunch of reasons as to why this is, among them: &lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;We don&#x27;t understand how deep learning models &lt;em&gt;actually&lt;&#x2F;em&gt; work.&lt;&#x2F;li&gt;
+&lt;li&gt;We don&#x27;t know how to make deep learning models do &lt;em&gt;precisely&lt;&#x2F;em&gt; what we want.&lt;&#x2F;li&gt;
+&lt;li&gt;We don&#x27;t even know what we want. (Or rather, how to explicitly state what we want)&lt;&#x2F;li&gt;
+&lt;li&gt;We don&#x27;t know which regulations reduce AI misuse most effectively.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;em&gt;...many more&lt;&#x2F;em&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;While all these problems are critical, this post focuses on problem 1: &lt;strong&gt;interpretability&lt;&#x2F;strong&gt;. I&#x27;m not an expert in this field, but I have &lt;em&gt;just&lt;&#x2F;em&gt; enough hands-on experience to lend a tiny hand to those looking to get started.&lt;&#x2F;p&gt;
+&lt;!-- TODO: You can check out these resources to answer the other questions... --&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Heads-up&lt;&#x2F;strong&gt;: I assume some understanding of &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=aircAruvnKk&quot;&gt;feed-forward neural networks (MLP)&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=IHZwWFHWa-w&quot;&gt;gradient descent&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;what-does-interpretability-solve&quot;&gt;What does interpretability solve?&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-does-interpretability-solve&quot; aria-label=&quot;Anchor link for: what-does-interpretability-solve&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s go back to the problem statement:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We don&#x27;t understand how deep learning models &lt;em&gt;actually&lt;&#x2F;em&gt; work.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;What do I mean by &amp;quot;how they &lt;em&gt;actually&lt;&#x2F;em&gt; work&amp;quot;?&lt;&#x2F;p&gt;
+&lt;p&gt;For decades, we have built different deep learning architectures such as multi-layer perceptrons; convolutional, residual and recurrent neural networks; LSTMs; transformers; and many more. During training, these machines encode patterns and algorithms inside their parameters (weights, biases, etc). We understand how the process works, but not the specific patterns and algorithms that emerge.&lt;&#x2F;p&gt;
+&lt;p&gt;Once trained, &lt;strong&gt;models are black boxes&lt;&#x2F;strong&gt;: while we provide inputs and get mostly correct outputs, we don&#x27;t understand how the model did so at a neuron level. We know that neurons are connected, but &lt;em&gt;how&lt;&#x2F;em&gt; are they connected to achieve the goal?&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;ll present you with an example of what I mean. Consider &lt;a href=&quot;https:&#x2F;&#x2F;unsplash.com&#x2F;photos&#x2F;black-and-white-cat-lying-on-brown-bamboo-chair-inside-room-gKXKBY-C-Dk&quot;&gt;this cat&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    
+    
+    
+
+    
+        
+    
+
+&lt;figure &gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;sinono3.github.io&amp;#x2F;processed_images&amp;#x2F;cat.65e72f53dcc5d2ac.jpg&quot;  &#x2F;&gt;
+    &lt;figcaption&gt;&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;aisafety.dance&#x2F;&quot;&gt;&lt;em&gt;(Consider them.)&lt;&#x2F;em&gt;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+ 
+&lt;p&gt;If fed to an image classification model such as ResNet18, it would be classified as &amp;quot;Egyptian cat,&amp;quot; which wouldn&#x27;t be far from the truth. There&#x27;s no single &amp;quot;cat&amp;quot; category in the model&#x27;s output categories, so it would be impossible for the model to simply answer &amp;quot;cat.&amp;quot; So, practically, it&#x27;s correct!&lt;&#x2F;p&gt;
+&lt;figure class=&quot;extended-figure&quot;&gt;
+    &lt;img src=&quot;&#x2F;blog&#x2F;feature&#x2F;ResNet18.excalidraw.svg&quot; &#x2F;&gt;
+&lt;&#x2F;figure&gt;
+&lt;p&gt;But how did the model come to that conclusion? Let&#x27;s do a reverse analysis.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Since the ImageNet class &amp;quot;Egyptian cat&amp;quot; has an index of 285, we know that in the fully connected last layer of the model (&lt;code&gt;fc&lt;&#x2F;code&gt;), neuron 285 has the greatest activation among the neurons in that layer (which are 1000 in total). This is because the last operation (&lt;code&gt;argmax&lt;&#x2F;code&gt;) returns the index of the previous layer&#x27;s neuron with the greatest activation.&lt;&#x2F;li&gt;
+&lt;li&gt;Neuron 285 in &lt;code&gt;fc&lt;&#x2F;code&gt; was activated because of some neuron activations in the previous layer (&lt;code&gt;avgpool&lt;&#x2F;code&gt;).&lt;&#x2F;li&gt;
+&lt;li&gt;Neurons in &lt;code&gt;avgpool&lt;&#x2F;code&gt; that contributed to neuron 285 in &lt;code&gt;fc&lt;&#x2F;code&gt; come from the results of a convolutional layer. &lt;&#x2F;li&gt;
+&lt;li&gt;This convolutional layer calculated its output using another convolutional layer&#x27;s output.&lt;&#x2F;li&gt;
+&lt;li&gt;And so on... until we get to the first layer, which is connected directly to the input image (cute cat pic).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;From this analysis, multiple questions pop up:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Circuit identification:&lt;&#x2F;strong&gt; Which neurons in &lt;code&gt;avgpool&lt;&#x2F;code&gt;, when activated, cause neuron 285 of layer &lt;code&gt;fc&lt;&#x2F;code&gt; to activate? And in the previous layer? What complex circuit of neurons has formed across the network&#x27;s layers to conclude this image corresponds to an &amp;quot;Egyptian cat&amp;quot;?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Visualization:&lt;&#x2F;strong&gt; What do these neurons firing represent? Do they correspond to concepts, shapes, forms, or objects? Can we see an image of what a single neuron represents? What about a set of neurons?&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Attribution&lt;&#x2F;strong&gt;: What parts of the input image contributed to the model outputting &amp;quot;Egyptian cat&amp;quot;? Which ones didn&#x27;t? What parts of the input image contribute to a particular neuron firing? What images make a neuron fire?&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;At the surface level, interpretability tries to answer these kinds of questions.&lt;&#x2F;p&gt;
+&lt;p&gt;Today, we&#x27;re going to have our try at &lt;strong&gt;visualization&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;defining-visualization&quot;&gt;Defining visualization&lt;a class=&quot;zola-anchor&quot; href=&quot;#defining-visualization&quot; aria-label=&quot;Anchor link for: defining-visualization&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;In the general case of any network, we can define &lt;em&gt;feature visualization&lt;&#x2F;em&gt; as generating an input that maximizes the activation of a part of the network: an output neuron, a hidden-layer neuron, a set of neurons, or an entire layer.&lt;&#x2F;p&gt;
+&lt;p&gt;In the case of image classification models, feature &lt;em&gt;visualization&lt;&#x2F;em&gt; quite literally refers to generating an image. Let&#x27;s say we do &lt;em&gt;class&lt;&#x2F;em&gt; visualization, where we optimize an image so the model &lt;em&gt;overwhelmingly&lt;&#x2F;em&gt; classifies it in a particular class (meaning the neuron corresponding to that class in the last layer will be significantly activated, more than all the other output neurons.) &lt;&#x2F;p&gt;
+&lt;p&gt;In a perfect world, if we were to visualize class 285 on ResNet18, we would get an image of a cute kitten. In reality, though, feature visualizations can be confusing and unintelligible compared to a natural picture. We&#x27;ll see this as we try to implement it ourselves.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementing-visualization&quot;&gt;Implementing visualization&lt;a class=&quot;zola-anchor&quot; href=&quot;#implementing-visualization&quot; aria-label=&quot;Anchor link for: implementing-visualization&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Using PyTorch, let&#x27;s implement class visualization for a pre-trained image classification model. We&#x27;re going to choose a specific ImageNet class and optimize an image so the model classifies it in the specified class. So, which class are we choosing?&lt;&#x2F;p&gt;
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    
+    
+    
+
+    
+        
+    
+
+&lt;figure &gt;
+    &lt;img src=&quot;https:&amp;#x2F;&amp;#x2F;sinono3.github.io&amp;#x2F;processed_images&amp;#x2F;hen.7c53653065aed7b3.jpg&quot;  &#x2F;&gt;
+    &lt;figcaption&gt;&lt;p&gt;ImageNet class 8: &lt;em&gt;hen&lt;&#x2F;em&gt;. &lt;a href=&quot;https:&#x2F;&#x2F;unsplash.com&#x2F;photos&#x2F;brown-and-red-he-n-G61iAuzI9NQ&quot;&gt;Source.&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+ 
+&lt;p&gt;Why chickens? Because &lt;strong&gt;all&lt;&#x2F;strong&gt; of them they easily recognizable red caruncles (look it up). Thus, it will be easier to see if our visualization works at all from the get-go.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;In case you want to use another ImageNet class&lt;&#x2F;strong&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;pytorch&#x2F;hub&#x2F;blob&#x2F;c7895df70c7767403e36f82786d6b611b7984557&#x2F;imagenet_classes.txt&quot;&gt;here&#x27;s the list you can choose from&lt;&#x2F;a&gt;. Once you did, record the line number of the label and subtract 1 to get the output neuron or class index. (This is because line numbers start at 1, while PyTorch tensors indexes do at 0)&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;We&#x27;re going to visualize the ResNet18 model. I obtained &amp;quot;good&amp;quot; results with this model during my own experimentation. Better visualizations can be obtained with larger models such as VGG19, but at the cost of optimization speed. In this case, I&#x27;m trading off better quality for quicker feedback loops, allowing easier experimentation.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;base-case-optimize-the-input-like-we-re-optimizing-model-parameters&quot;&gt;Base case: Optimize the input like we&#x27;re optimizing model parameters&lt;a class=&quot;zola-anchor&quot; href=&quot;#base-case-optimize-the-input-like-we-re-optimizing-model-parameters&quot; aria-label=&quot;Anchor link for: base-case-optimize-the-input-like-we-re-optimizing-model-parameters&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;We will begin writing code by importing matplotlib as our backend to display images conveniently. We&#x27;ll also define a function &lt;code&gt;ptimg_to_mplimg&lt;&#x2F;code&gt; to convert the images from a PyTorch tensor to a numpy array, suitable for display in matplotlib. We define &lt;code&gt;show_img&lt;&#x2F;code&gt; to be able to display images concisely in a single function call.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;torch
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;torchvision
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;matplotlib.pyplot &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span&gt;plt
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;ptimg_to_mplimg&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: torch.Tensor):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;with &lt;&#x2F;span&gt;&lt;span&gt;torch.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;no_grad&lt;&#x2F;span&gt;&lt;span&gt;():
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;detach&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;squeeze&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;permute&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;clamp&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;numpy&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;show_img&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;: torch.Tensor, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;title&lt;&#x2F;span&gt;&lt;span&gt;: str):
+&lt;&#x2F;span&gt;&lt;span&gt;    plt.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;imshow&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ptimg_to_mplimg&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;    plt.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;title&lt;&#x2F;span&gt;&lt;span&gt;(title)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Setting `block=False` and calling `plt.pause` allow us to display the progress in real time
+&lt;&#x2F;span&gt;&lt;span&gt;    plt.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;show&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;block&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;False&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    plt.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;pause&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.1&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;With the boilerplate out of the way, let&#x27;s go ahead and implement the simplest, most obvious way to do class visualization. We&#x27;ll refer to how we usually train neural networks: using a built-in PyTorch optimizer which adjusts parameters to minimize the loss function. Here, we will try to do the same, but instead of optimizing the model&#x27;s parameters, we will optimize the input. &amp;quot;What will be our loss function?&amp;quot; you may ask. We&#x27;ll answer that later.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s download the pre-trained model:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span&gt;model = torch.hub.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;load&lt;&#x2F;span&gt;&lt;span&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;pytorch&#x2F;vision:v0.10.0&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;resnet18&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;weights&lt;&#x2F;span&gt;&lt;span&gt;=&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;ResNet18_Weights.IMAGENET1K_V1&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Set the model to evaluation mode: 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Disables dropout and batch normalization layers, which we don&amp;#39;t need right now
+&lt;&#x2F;span&gt;&lt;span&gt;model.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;eval&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We need to define our initial image, which will be the starting point for the optimization. We&#x27;ll use uniformly random values ranging from 0 to 1. Do notice that we can use any image as the starting point.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input &lt;&#x2F;span&gt;&lt;span&gt;= torch.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rand&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;299&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;299&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;requires_grad&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;True&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We declare our target class to be &amp;quot;hen.&amp;quot;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;8 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# cluck cluck, buck buck bugawk
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Hmm, what optimizer should we use? Why not plain ol&#x27; SGD? (stochastic gradient descent)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;LR &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5
+&lt;&#x2F;span&gt;&lt;span&gt;optimizer = torch.optim.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;SGD&lt;&#x2F;span&gt;&lt;span&gt;([&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;], &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;lr&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;LR&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We&#x27;ll create a function that performs a single optimization step to organize our code neatly.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;():
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zero_grad&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    loss = -output[:, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS&lt;&#x2F;span&gt;&lt;span&gt;].&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mean&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    loss.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;backward&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Here, we have done something important: &lt;strong&gt;We defined our loss function as the negative of the activation of the output neuron corresponding to the target class&lt;&#x2F;strong&gt;. We want this neuron&#x27;s activation to be as great as possible. Our optimizer tries to &lt;em&gt;minimize&lt;&#x2F;em&gt; the loss function, thus, if we set the loss function to be the negative of the target neuron&#x27;s activation, the optimizer will try to maximize the target neuron&#x27;s activation.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, we simply need to call the step function in a loop, displaying our image every few steps to see the progress.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;STEPS &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;200
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;range&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;STEPS&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Show image every 10 steps
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;i % &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10 &lt;&#x2F;span&gt;&lt;span&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Step &lt;&#x2F;span&gt;&lt;span&gt;{i}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;STEPS&lt;&#x2F;span&gt;&lt;span&gt;}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;show_img&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Visualization of class &lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS&lt;&#x2F;span&gt;&lt;span&gt;}&amp;quot;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Okay! We&#x27;ve completed our first version. Let&#x27;s see how it does.&lt;&#x2F;p&gt;
+
+
+&lt;figure &gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;app0.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;Hmm. That doesn&#x27;t quite look like a fowl. What can we do to improve this?&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;improvement-1-change-the-initial-image&quot;&gt;Improvement 1: Change the initial image&lt;a class=&quot;zola-anchor&quot; href=&quot;#improvement-1-change-the-initial-image&quot; aria-label=&quot;Anchor link for: improvement-1-change-the-initial-image&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Starting with random values from 0 to 1 may cause the optimizer to tend to extreme values (outside the 0-1 RGB range). Not only do these values generate high contrast in the image, but if we want to get rid of the noise, starting with an already noisy image may not be the best option. Let&#x27;s try a more uniformly gray initial image. To be more precise, the same random noise, but with a mean of 0.5 and a range of 0.49-0.51.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s reflect these changes in our code:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input &lt;&#x2F;span&gt;&lt;span&gt;= (torch.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;rand&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;299&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;299&lt;&#x2F;span&gt;&lt;span&gt;) - &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;) * &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.01 &lt;&#x2F;span&gt;&lt;span&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;.requires_grad = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;True
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+
+&lt;figure &gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;app1.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;That&#x27;s a lot better! If one squints, the red caruncles of the chickens pop out, while in the rest of the image, feather-like patterns start to emerge.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;improvement-2-enforcing-transformational-robustness&quot;&gt;Improvement 2: Enforcing transformational robustness&lt;a class=&quot;zola-anchor&quot; href=&quot;#improvement-2-enforcing-transformational-robustness&quot; aria-label=&quot;Anchor link for: improvement-2-enforcing-transformational-robustness&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;We&#x27;ve been calculating the gradients based on the same image at the same scale, rotation, and translation for every step.
+This means our code optimizes for the image to be classified as &amp;quot;hen&amp;quot; only from one point of view.
+If we rotate the image, it&#x27;s not certain that it will still be classified as &amp;quot;hen.&amp;quot; 
+Our image is not &lt;em&gt;transformationally robust&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;If we want the model to recognize the target class in our image after being scaled or rotated, we must optimize the image to do so.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Why would this help with the noise problem?&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;I don&#x27;t have it quite clear, actually. 
+Speaking &lt;em&gt;very vaguely&lt;&#x2F;em&gt;, introducing stochastic jittering, scale, and rotation seems to prevent the optimizer from sticking to a certain noisy pattern.
+For a much better explanation, you can check &lt;a href=&quot;https:&#x2F;&#x2F;distill.pub&#x2F;2017&#x2F;feature-visualization&quot;&gt;the &lt;em&gt;Transformational robustness&lt;&#x2F;em&gt; section of the &lt;em&gt;Feature Visualization&lt;&#x2F;em&gt; paper on Distill.&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Anyways, the implementation involves applying random transformations on the input before the optimization.&lt;&#x2F;p&gt;
+&lt;p&gt;Before our step function, we must define what transforms we&#x27;ll apply to our image before passing it to our model.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;torchvision &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;transforms &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span&gt;T
+&lt;&#x2F;span&gt;&lt;span&gt;transforms = T.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;Compose&lt;&#x2F;span&gt;&lt;span&gt;([
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Applies minor changes in brightness, contrast, saturation, and hue
+&lt;&#x2F;span&gt;&lt;span&gt;    T.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ColorJitter&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;brightness&lt;&#x2F;span&gt;&lt;span&gt;=(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.98&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.02&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;contrast&lt;&#x2F;span&gt;&lt;span&gt;=(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.99&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.01&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;saturation&lt;&#x2F;span&gt;&lt;span&gt;=(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.98&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.02&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;hue&lt;&#x2F;span&gt;&lt;span&gt;=(-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.01&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.01&lt;&#x2F;span&gt;&lt;span&gt;)),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Rotates the image by 15deg clockwise or counter-clockwise. We also apply a bit of random zoom in and out.
+&lt;&#x2F;span&gt;&lt;span&gt;    T.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;RandomAffine&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;degrees&lt;&#x2F;span&gt;&lt;span&gt;=(-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;15.0&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;15.0&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;scale&lt;&#x2F;span&gt;&lt;span&gt;=(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.96&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.04&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;fill&lt;&#x2F;span&gt;&lt;span&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;])
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;On our step function, we must modify the forward-pass call.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;():
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zero_grad&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;transforms&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# &amp;lt;-- this line right here
+&lt;&#x2F;span&gt;&lt;span&gt;    loss = -output[:, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS&lt;&#x2F;span&gt;&lt;span&gt;].&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mean&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    loss.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;backward&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+
+&lt;figure &gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;app2.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;Result after optimizing for transformational robustness.&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note on gradient propagation:&lt;&#x2F;strong&gt; While I was originally implementing transformational robustness, I misunderstood its concept and &lt;em&gt;actually transformed the visualization&lt;&#x2F;em&gt;, instead of &lt;em&gt;just doing gradient propagation on&lt;&#x2F;em&gt; the transformed image. The difference is in the step function:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Case 1: ACTUALLY TRANSFORMING THE VISUALIZATION (don&amp;#39;t try at home)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;transforms&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;detach&lt;&#x2F;span&gt;&lt;span&gt;())
+&lt;&#x2F;span&gt;&lt;span&gt;output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# Case 2: JUST DOING GRADIENT PROPAGATION ON THE TRANSFORMED IMAGE
+&lt;&#x2F;span&gt;&lt;span&gt;output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;transforms&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;improvement-3-implement-l2-regularization&quot;&gt;Improvement 3: Implement L2 regularization&lt;a class=&quot;zola-anchor&quot; href=&quot;#improvement-3-implement-l2-regularization&quot; aria-label=&quot;Anchor link for: improvement-3-implement-l2-regularization&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;L2 regularization. Hmm, what? It&#x27;s simply adding the square of the parameters we&#x27;re optimizing to our loss function. Actually, we add the sum of the squares of our parameters multiplied by a coefficient, usually called λ (lambda). In this case, the parameters are the color values for each pixel.&lt;&#x2F;p&gt;
+&lt;p&gt;This basically penalizes color values that deviate significantly from 0. In our case, we don&#x27;t want values that stray too far from 0.5, the &amp;quot;middle&amp;quot; point between 0.0 and 1.0, the range of color values. This allows our optimization to have a balance between maximizing our target activation (be it class, neuron, layer, whatever) and having our image be in a valid color range. This will get rid of values that are too extreme on the red, green, or blue channels.&lt;&#x2F;p&gt;
+&lt;p&gt;Implementing it is quite easy. We only need to define λ and change a line in the loss function definition.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;LR &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.5 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# We&amp;#39;ll also increase the learning rate.
+&lt;&#x2F;span&gt;&lt;span&gt;L2_lambda = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.05
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;In our step function:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;():
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zero_grad&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;transforms&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;    loss = -output[:, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS&lt;&#x2F;span&gt;&lt;span&gt;].&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mean&lt;&#x2F;span&gt;&lt;span&gt;() + L2_lambda * ((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input &lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;) ** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;()     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# &amp;lt;-- this line
+&lt;&#x2F;span&gt;&lt;span&gt;    loss.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;backward&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+
+&lt;figure &gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;app3.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    
+&lt;&#x2F;figure&gt;
+
+&lt;h3 id=&quot;improvement-4-blur-the-image-every-few-steps&quot;&gt;Improvement 4: Blur the image every few steps&lt;a class=&quot;zola-anchor&quot; href=&quot;#improvement-4-blur-the-image-every-few-steps&quot; aria-label=&quot;Anchor link for: improvement-4-blur-the-image-every-few-steps&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;Now, for a final technique, I&#x27;ll introduce a somewhat obvious technique to get rid of noise, which can work surprisingly well: simply applying Gaussian blur to the image. Of course, if we do this repeatedly we will only get a blurry image. If done occasionally, though, we can obtain good results.&lt;&#x2F;p&gt;
+&lt;p&gt;We will add a parameter to our step function so we can know our step index.
+Arbitrarily, I&#x27;ve set the step function to blur the image every 10 steps.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;: int):
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;zero_grad&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    output = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;transforms&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;    loss = -output[:, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;TARGET_CLASS&lt;&#x2F;span&gt;&lt;span&gt;].&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;mean&lt;&#x2F;span&gt;&lt;span&gt;() + L2_lambda * ((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input &lt;&#x2F;span&gt;&lt;span&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;) ** &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    loss.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;backward&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;    optimizer.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;i % &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;10 &lt;&#x2F;span&gt;&lt;span&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;with &lt;&#x2F;span&gt;&lt;span&gt;torch.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;no_grad&lt;&#x2F;span&gt;&lt;span&gt;():
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;copy_&lt;&#x2F;span&gt;&lt;span&gt;((T.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;GaussianBlur&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1.5&lt;&#x2F;span&gt;&lt;span&gt;))(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;STEPS &lt;&#x2F;span&gt;&lt;span&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;200
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;range&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;STEPS&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;step&lt;&#x2F;span&gt;&lt;span&gt;(i)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;# ... the rest of the code
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will coincide exactly with our image display, so you can see the blur effect.
+To prevent this coincidence you can change the blurring condition to &lt;code&gt;i % 10 == 1&lt;&#x2F;code&gt;.
+This will make the blurring occur exactly after displaying the image, instead of before.&lt;&#x2F;p&gt;
+
+
+&lt;figure &gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;app4.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    
+&lt;&#x2F;figure&gt;
+
+&lt;h2 id=&quot;testing-our-visualization-on-various-classes&quot;&gt;Testing our visualization on various classes&lt;a class=&quot;zola-anchor&quot; href=&quot;#testing-our-visualization-on-various-classes&quot; aria-label=&quot;Anchor link for: testing-our-visualization-on-various-classes&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;Now that we&#x27;ve got something working, let&#x27;s try our model with lots of different classes:&lt;&#x2F;p&gt;
+
+
+&lt;figure class=&quot;extended-figure&quot;&gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;conclusion.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;From top-left to bottom-right: hen (8), pelican (144), leopard (288), hammer (587), iPod (605), slot (800), potpie (964), scuba diver (983).&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;h3 id=&quot;weird-experimentation-eternal-zoom-in&quot;&gt;Weird experimentation (eternal zoom-in)&lt;a class=&quot;zola-anchor&quot; href=&quot;#weird-experimentation-eternal-zoom-in&quot; aria-label=&quot;Anchor link for: weird-experimentation-eternal-zoom-in&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h3&gt;
+&lt;p&gt;While initially implementing transformational robustness, I misunderstood the concept and &lt;em&gt;actually transformed the visualization&lt;&#x2F;em&gt;, instead of &lt;em&gt;just doing gradient propagation on&lt;&#x2F;em&gt; the transformed image. During these trying times, I experimented with biasing the transformations to continually increase the scale of the image. The result is an eternal zoom-in effect, but the atmosphere is that of endlessly submerging yourself in alien worlds.&lt;&#x2F;p&gt;
+
+
+&lt;figure class=&quot;extended-figure&quot;&gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;alien3.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;Left: &#x27;hen&#x27; (8). Right: &#x27;robin&#x27; (15)&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;I also implemented a sort-of L1 regularization where simply the color values multiplied by a lambda coefficient are added to the loss function. This gives some very trippy results.&lt;&#x2F;p&gt;
+
+
+&lt;figure class=&quot;extended-figure&quot;&gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;alien.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;Left: &#x27;hen&#x27; (8). Right: &#x27;robin&#x27; (15)&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;I&#x27;d dare say that these moving visualizations give us a different perspective to understand what a feature represents.&lt;&#x2F;p&gt;
+
+
+&lt;figure class=&quot;extended-figure&quot;&gt;
+    &lt;video  controls  muted loop width=&quot;100%&quot;&gt;&lt;source src=&amp;#x2F;blog&amp;#x2F;feature&amp;#x2F;barbellwine.mp4 type=&quot;video&#x2F;mp4&quot;&gt;&lt;&#x2F;video&gt;
+    &lt;figcaption&gt;&lt;p&gt;Left: Barbell World. Right: Wine World.&lt;&#x2F;p&gt;
+&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;h2 id=&quot;limitations&quot;&gt;Limitations&lt;a class=&quot;zola-anchor&quot; href=&quot;#limitations&quot; aria-label=&quot;Anchor link for: limitations&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;There are definitely some limitations to our current approach:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;L2 regularization inherently reduces color contrast since we unfavor color values that stray far from [0.5, 0.5, 0.5].&lt;&#x2F;li&gt;
+&lt;li&gt;ResNet18 is a relatively small model, so its visualizations may not be as high quality as those from larger models.&lt;&#x2F;li&gt;
+&lt;li&gt;ResNet18 seems to have a bias towards the color green. This is a common feature among many of the models I&#x27;ve tested. &lt;em&gt;My theory&lt;&#x2F;em&gt;: since many of the classes and thus training data are animal-related, grass is a common denominator in the background of these pictures. Therefore, the model sees a lot of green during its training, which generates a bias.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Bilateral_filter&quot;&gt;There are better alternatives to Gaussian blur for our purpose.&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Reading &lt;a href=&quot;https:&#x2F;&#x2F;distill.pub&#x2F;2017&#x2F;feature-visualization&#x2F;&quot;&gt;this article will give you an idea of how good feature visualization can look when done right&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;a class=&quot;zola-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;
+    &lt;svg class=&quot;zola-anchor-link&quot; viewBox=&quot;0 0 16 16&quot; version=&quot;1.1&quot; width=&quot;16&quot; height=&quot;16&quot; aria-hidden=&quot;true&quot;&gt;
+        &lt;path fill-rule=&quot;evenodd&quot;
+            d=&quot;M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z&quot;&gt;
+        &lt;&#x2F;path&gt;
+    &lt;&#x2F;svg&gt;
+&lt;&#x2F;a&gt;
+&lt;&#x2F;h2&gt;
+&lt;p&gt;That&#x27;s good enough for the scope of this post. I hope you found interpretability to be fun and interesting. &lt;&#x2F;p&gt;
+&lt;p&gt;And hey, if you did, don&#x27;t stop here! I barely scratched the surface of what the field actually revolves around. There are a bunch of resources for you to continue researching:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;distill.pub&#x2F;2020&#x2F;circuits&#x2F;&quot;&gt;Distill&#x27;s Circuits Thread&lt;&#x2F;a&gt;: Great and accessible interpretability papers. Contains &lt;a href=&quot;https:&#x2F;&#x2F;distill.pub&#x2F;2017&#x2F;feature-visualization&quot;&gt;a paper specifically related to feature visualizations&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;transformer-circuits.pub&#x2F;&quot;&gt;Transformer Circuits Thread&lt;&#x2F;a&gt;: State-of-the-art interpretability papers about transformers and language models.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.arena.education&#x2F;&quot;&gt;ARENA Course&lt;&#x2F;a&gt;: Hands-on practice for AI alignment&#x2F;interpretability skills.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;!--
+I apologize for a lack of formalities. At no point I provided any reference, proof or evidence of what I suggested throughout. However, I believe skipping a couple steps can sometimes be more effective to explain something to someone new to field. (I can confirm that, still being new to the field myself!)
+
+## Prithvi&#x27;s Notes
+
+- Explaining the code more explicitly. That may help the more general audience understand exactly what they&#x27;re doing.
+- Maybe add &quot;nutshells&quot;, where if people wanted to learn more about a topic, they could open a little box explainer. This is to add information where there could be, but also make it optional.
+ --&gt;
+</content>
+        
+    </entry>
+</feed>

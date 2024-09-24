@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="es">
+    <title>Aldo Acevedo - software</title>
+    <subtitle>Personaje que desarrolló software, gráficos y videojuegos.
+__Ahora estoy incursionando en machine learning e interpretabilidad mecanística.__
+[Conoce más acerca de mí.](&#x2F;es&#x2F;about)
+
+[**This page is available in English.**](&#x2F;)
+</subtitle>
+    <link href="https://sinono3.github.io/es/categories/software/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://sinono3.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-12-06T00:00:00+00:00</updated>
+    <id>https://sinono3.github.io/es/categories/software/atom.xml</id>
+    <entry xml:lang="es">
+        <title>quiren</title>
+        <published>2021-12-06T00:00:00+00:00</published>
+        <updated>2021-12-06T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/es/projects/quiren/" type="text/html"/>
+        <id>https://sinono3.github.io/es/projects/quiren/</id>
+        
+        <summary type="html">&lt;p&gt;Edits the filenames of the current directory on the editor of your choice.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="es">
+        <title>canved</title>
+        <published>2021-07-09T00:00:00+00:00</published>
+        <updated>2021-07-09T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/es/projects/canved/" type="text/html"/>
+        <id>https://sinono3.github.io/es/projects/canved/</id>
+        
+        <summary type="html">&lt;p&gt;A lightweight and minimalistic image editor for Unix systems.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+    <entry xml:lang="es">
+        <title>aldoc</title>
+        <published>2021-06-28T00:00:00+00:00</published>
+        <updated>2021-06-28T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://sinono3.github.io/es/projects/aldoc/" type="text/html"/>
+        <id>https://sinono3.github.io/es/projects/aldoc/</id>
+        
+        <summary type="html">&lt;p&gt;Markup language inspired by Markdown. Compiles to PDF and LaTeX.&lt;&#x2F;p&gt;
+</summary>
+        
+    </entry>
+</feed>
