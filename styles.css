@@ -1,0 +1,167 @@
+/* Base styles */
+body {
+  font-family: serif;
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+  padding: 20px;
+  background-color: #fff;
+}
+
+/* Container for reading format */
+main {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2em;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+p {
+  text-align: justify;
+  margin-bottom: 1em;
+}
+
+/* Links */
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Lists */
+ul, ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.25em;
+}
+
+/* Images and videos */
+img {
+  width: 100%;
+  height: auto;
+}
+
+video {
+  width: 100%;
+  height: auto;
+}
+
+/* Figure containers (for shortcodes) */
+figure {
+  margin: 1.5em 0;
+  padding: 0;
+}
+
+figure img,
+figure video {
+  margin: 0;
+  display: block;
+  border-radius: 4px;
+}
+
+figcaption {
+  font-size: 0.9em;
+  color: #666;
+  text-align: center;
+  margin-top: 0.5em;
+  padding: 0 1em;
+  font-style: italic;
+}
+
+/* Extended class for wider media */
+.extended {
+  width: calc(100vw - 40px);
+  max-width: 1200px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 1.5em 0;
+}
+
+.extended img,
+.extended video {
+  width: 100%;
+}
+
+/* Code */
+code {
+  background-color: #f5f5f5;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Code blocks */
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  padding: 1.5em;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.4;
+  margin: 1.5em 0;
+  
+  /* Break out of container and center */
+  width: calc(100vw - 40px);
+  max-width: 900px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+  
+  main {
+    max-width: none;
+  }
+  
+  h1 {
+    font-size: 1.75em;
+  }
+  
+  h2 {
+    font-size: 1.35em;
+  }
+  
+  /* Adjust for mobile padding */
+  pre,
+  .extended {
+    width: calc(100vw - 30px);
+  }
+}
