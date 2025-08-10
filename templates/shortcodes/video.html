@@ -1,7 +1,0 @@
-{# {{ video(path="", caption="", extended=false, autoplay=false}} #}
-
-<figure {% if extended %}class="extended-figure"{% endif %}>
-    <video {% if autoplay %} autoplay {% else %} controls {% endif %} muted loop width="100%"><source src={{path}} type="video/mp4"></video>
-    {% if caption %}<figcaption>{{ caption | markdown | safe }}</figcaption>{% endif %}
-</figure>
-
