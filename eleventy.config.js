@@ -11,6 +11,7 @@ export default async function(eleventyConfig) {
     	.addPassthroughCopy("**/*.mp4")
     	.addPassthroughCopy("**/*.gif")
     	.addPassthroughCopy("**/*.svg")
+    	.addPassthroughCopy("**/*.webp")
     	.addPassthroughCopy({
   			"./public/": "/"
   		});
@@ -36,6 +37,9 @@ export default async function(eleventyConfig) {
           <img src="${path}"/>
           ${caption}
       </figure>`;
+    });
+    eleventyConfig.setServerOptions({
+      showAllHosts: true,
     });
 };
 
