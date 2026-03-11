@@ -83,7 +83,7 @@ video {
 
 /* Sized variants */
 img.icon {
-  width: 1.5em;
+  width: 1.2em;
   height: auto;
   vertical-align: middle;
 }
@@ -196,39 +196,64 @@ p:last-child:has(em) {
   font-size: 0.875em;
 }
 
-/* Personal projects grid */
-ul.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2.5em 2em;
-  list-style: none;
-  padding-left: 0;
-  margin-bottom: 1em;
-
+.exitcont  {
   /* Break out of the main container */
   width: calc(100vw - 48px);
   max-width: 1100px;
   position: relative;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%);  
+}
+
+/* Personal projects grid */
+ul.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25em;
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 1.5em;
 }
 
 ul.projects-grid > li {
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
+  border: 1px solid #e8e8e5;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-ul.projects-grid > li img {
-  margin-top: auto;
-  padding-top: 0.75em;
+ul.projects-grid > li > video,
+ul.projects-grid > li > img {
   width: 100%;
-  border-radius: 3px;
+  border-radius: 0;
+  margin: 0;
 }
 
-/* "There are more" trailing item spans full width */
-ul.projects-grid > li:last-child {
-  grid-column: 1 / -1;
+/* Title link */
+ul.projects-grid > li > a {
+  display: block;
+  padding: 1em;
+  font-weight: 700;
+  font-size: 1em;
+  letter-spacing: -0.01em;
+  color: #111;
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+ul.projects-grid > li > a:hover {
+  text-decoration: underline;
+  text-decoration-color: #bbb;
+}
+
+/* Description */
+ul.projects-grid > li > p {
+  padding: 1em;
+  font-size: 0.875em;
+  color: #555;
+  line-height: 1.5;
 }
 
 /* Mobile responsiveness */
