@@ -9,8 +9,8 @@ layout: layouts/layout.html
   Work awaiting review to be published soon.
 - **4th-year Information engineering student at Universidad Politécnica Taiwán Paraguay**, on 3-semester exchange at National Taiwan University of Science and Technology (2025-2026).
 - **Exchange student** at _National Taiwan University of Science and Technology_.
-- **Software engineer**, primarily in Rust, C#, game development, graphics programming, backend.
-- **Indie game developer**. I used to make games. You can check out my games [here](games).
+- **Software engineer**. Rust, C#, game development, graphics programming, backend.
+- **Indie game developer**. You can check out my games [here](games).
 
 <a href="https://github.com/Sinono3"><img src="github.svg" class="icon"> GitHub</a>
 | <a href="https://www.linkedin.com/in/aldo-acevedo-9a38a9289"><img src="linkedin.png" class="icon"> LinkedIn</a>
@@ -56,23 +56,6 @@ layout: layouts/layout.html
       <p><a href="https://github.com/Sinono3/obsidian-helix">obsidian-helix</a>: Helix keybindings for Obsidian.<br><a href="https://github.com/Sinono3/aldoc">aldoc</a>: Markup language that compiles to LaTeX/PDF.</p>
     </li>
   </ul>
-
-  <!-- ### About -->
-  <!-- On the side, I'm also a... -->
-  <!-- - **Producer/musician** under various names. Some songs selected [here](music). -->
-  <!-- ### thoughts -->
-  <!-- Unfiltered notes written while trying to -->
-  <!-- (a) generate novel abstractions over phenomena, or -->
-  <!-- (b) optimize for my happiness. -->
-  <!-- Not directly intended to be read by an audience, but published anyway, -->
-  <!-- just in case someone might find it interesting or relatable. -->
-  <!-- <ul> -->
-  <!-- {% for post in collections.thoughts %} -->
-    <!-- <li><a href={{ post.url }}>{{ post.data.title }}</a></li> -->
-  <!-- {% endfor %} -->
-  <!-- </ul> -->
-  <!-- Here's a interactive timeline of my life: -->
-  <!-- `insert timeline` -->
 
   <i>Last updated: 2026-02-28</i>
 </div>
